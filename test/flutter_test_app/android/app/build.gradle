@@ -37,6 +37,7 @@ android {
         applicationId "com.example.flutter_test_app"
         minSdkVersion 16
         targetSdkVersion 30
+        // multDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
