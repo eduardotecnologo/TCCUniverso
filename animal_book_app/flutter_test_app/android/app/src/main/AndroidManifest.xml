@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutter_test_app">
+    package="com.animal_book_app">
    <application
-        android:label="flutter_test_app"
+        android:label="com.animal_book_app"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
