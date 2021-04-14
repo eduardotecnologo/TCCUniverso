@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_app/Home.dart';
+import 'package:flutter_test_app/views/Home.dart';
 
 final ThemeData temaPadrao = ThemeData(
   primaryColor: Color(0xffff8c1a),
