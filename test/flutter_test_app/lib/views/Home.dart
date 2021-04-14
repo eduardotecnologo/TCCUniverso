@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 
+import 'CustomInput.dart';
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  TextEditingController _controllerEmail = new TextEditingController();
+  TextEditingController _controllerSenha = new TextEditingController();
+
   bool _cadastrar = false;
   @override
   Widget build(BuildContext context) {
@@ -14,7 +19,7 @@ class _HomeState extends State<Home> {
         title:Text(""),
       ),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(16.0),
         child: Center(
           child: SingleChildScrollView(
             child:Column(
@@ -28,33 +33,24 @@ class _HomeState extends State<Home> {
                     height:150,
                     ),
                 ),
-                TextField(
+                CustomInput(
+                  controller: _controllerEmail,
+                  hint: "E-mail",
                   autofocus: true,
-                  keyboardType: TextInputType.emailAddress,
-                  style: TextStyle(fontSize:20),
-                  decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    hintText: "E-mail",
-                    filled: true,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(6)
-                    )
-                  ),
+                  type: TextInputType.emailAddress,
                 ),
-
-                TextField(
-                obscureText: true,
-                keyboardType: TextInputType.text,
-                style: TextStyle(fontSize: 20),
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                    hintText: "Senha",
-                    filled: true,
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(6)
-                  )
-                ),
+                Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(''),
+                ],
               ),
+
+                CustomInput(
+                  controller: _controllerSenha,
+                  hint: "Senha",
+                  obscure: true
+                ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
