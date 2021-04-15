@@ -3,13 +3,12 @@ import 'package:flutter_test_app/models/Usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'CustomInput.dart';
 
-class Home extends StatefulWidget {
+class Login extends StatefulWidget {
   @override
-
-  _HomeState createState() => _HomeState();
+  _LoginState createState() => _LoginState();
 }
 
-class _HomeState extends State<Home> {
+class _LoginState extends State<Login> {
   TextEditingController _controllerEmail = new TextEditingController();
   TextEditingController _controllerSenha = new TextEditingController();
 

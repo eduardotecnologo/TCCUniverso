@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_app/views/Home.dart';
+import 'package:flutter_test_app/views/Login.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 final ThemeData temaPadrao = ThemeData(
@@ -13,7 +13,7 @@ void main() async{
 
   runApp(MaterialApp(
     title: "Animal Book",
-    home: Home(),
+    home: Login(),
     theme: temaPadrao,
     debugShowCheckedModeBanner: false,
   ));
