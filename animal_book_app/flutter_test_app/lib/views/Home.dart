@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_test_app/models/Usuario.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'CustomInput.dart';
 
 class Home extends StatefulWidget {
   @override
+
   _HomeState createState() => _HomeState();
 }
 
@@ -12,75 +14,142 @@ class _HomeState extends State<Home> {
   TextEditingController _controllerSenha = new TextEditingController();
 
   bool _cadastrar = false;
+  String _mensagemErro = "";
+  String _textBotao = "Entrar";
+
+  // Métodos Cadastrar e Logar
+  _cadastrarUsuario(Usuario usuario) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    auth
+        .createUserWithEmailAndPassword(
+            email: usuario.email,
+            password: usuario.senha
+            ).then((firebaseUser) {
+      // redirecionar para a tela principal
+      //
+    });
+  }
+
+  _logarUsuario(Usuario usuario) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    auth.signInWithEmailAndPassword(
+      email: usuario.email,
+      password: usuario.senha
+      ).then((firebaseUser) {
+      // redirecionar para a tela principal
+
+    });
+  }
+
+  // Recuperar os dados dos campos
+  _validarCampos() {
+    String email = _controllerEmail.text;
+    String senha = _controllerSenha.text;
+
+    if (email.isNotEmpty && email.contains("@")) {
+      if (senha.isNotEmpty && senha.length > 6) {
+        // Configurar um Usuário
+        Usuario usuario = Usuario();
+        usuario.email = email;
+        usuario.senha = senha;
+        // Cadastrar o susuário ou logar
+        if (_cadastrar) {
+          _cadastrarUsuario(usuario);
+        } else {
+          _logarUsuario(usuario);
+        }
+      } else {
+        setState(() {
+          _mensagemErro = "Preencha a senha! digite mais de 6 caracteres";
+        });
+      }
+    } else {
+      setState(() {
+        _mensagemErro = "Preencha um E-mail válido";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text(""),
+        title: Text(""),
       ),
       body: Container(
         padding: EdgeInsets.all(16.0),
         child: Center(
-          child: SingleChildScrollView(
-            child:Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Padding(
-                  padding:EdgeInsets.only(bottom: 32),
-                  child: Image.asset(
-                    "img/logo.png",
-                    width:200,
-                    height:150,
-                    ),
+            child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(bottom: 32),
+                child: Image.asset(
+                  "img/logo.png",
+                  width: 200,
+                  height: 150,
                 ),
-                CustomInput(
-                  controller: _controllerEmail,
-                  hint: "E-mail",
-                  autofocus: true,
-                  type: TextInputType.emailAddress,
-                ),
-                Row(
+              ),
+              CustomInput(
+                controller: _controllerEmail,
+                hint: "E-mail",
+                autofocus: true,
+                type: TextInputType.emailAddress,
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(''),
                 ],
               ),
-
-                CustomInput(
-                  controller: _controllerSenha,
-                  hint: "Senha",
-                  obscure: true
-                ),
+              CustomInput(
+                  controller: _controllerSenha, hint: "Senha", obscure: true),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text("Logar"),
                   Switch(
-                    value: _cadastrar,
-                    onChanged: (bool valor){
-                      setState((){
-                        _cadastrar = valor;
-                      });
-                  }),
+                      value: _cadastrar,
+                      onChanged: (bool valor) {
+                        setState(() {
+                          _cadastrar = valor;
+                          _textBotao = "Entrar";
+                          if(_cadastrar){
+                            _textBotao = "Cadastrar";
+                          }
+                        });
+                      }),
                   Text("Cadastrar"),
                 ],
               ),
               RaisedButton(
                 child: Text(
-                  "Entrar",
+                  _textBotao,
                   style: TextStyle(
-                    color: Colors.white, fontSize: 20
-                  ),
+                    color: Colors.white,
+                    fontSize: 20),
                 ),
                 color: Color(0xffff8c1a),
                 padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                onPressed: (){
-
+                onPressed: () {
+                  _validarCampos();
                 },
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Text(
+                  _mensagemErro,
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.red),
+                ),
               )
-            ],),
-          )
-        ),
+            ],
+          ),
+        )),
       ),
     );
   }
