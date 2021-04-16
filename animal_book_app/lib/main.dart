@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_test_app/views/Anuncios.dart';
 import 'package:flutter_test_app/views/Login.dart';
 import 'package:firebase_core/firebase_core.dart';
+
+import 'RouteGenerator.dart';
 
 final ThemeData temaPadrao = ThemeData(
   primaryColor: Color(0xffff8c1a),
@@ -13,8 +16,10 @@ void main() async{
 
   runApp(MaterialApp(
     title: "Animal Book",
-    home: Login(),
+    home: Anuncios(),
     theme: temaPadrao,
+    initialRoute: "/",
+    onGenerateRoute: RouteGenerator.generateRoute,
     debugShowCheckedModeBanner: false,
   ));
 }

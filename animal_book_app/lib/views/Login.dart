@@ -20,13 +20,12 @@ class _LoginState extends State<Login> {
   _cadastrarUsuario(Usuario usuario) {
     FirebaseAuth auth = FirebaseAuth.instance;
 
-    auth
-        .createUserWithEmailAndPassword(
+    auth.createUserWithEmailAndPassword(
             email: usuario.email,
             password: usuario.senha
             ).then((firebaseUser) {
       // redirecionar para a tela principal
-      //
+      Navigator.pushReplacementNamed(context, "/");
     });
   }
 
@@ -37,7 +36,7 @@ class _LoginState extends State<Login> {
       password: usuario.senha
       ).then((firebaseUser) {
       // redirecionar para a tela principal
-
+      Navigator.pushReplacementNamed(context, "/");
     });
   }
 
