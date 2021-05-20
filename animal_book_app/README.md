@@ -1,4 +1,4 @@
-# flutter_test_app
+# animal_book_app
 
 A new Flutter project.
 

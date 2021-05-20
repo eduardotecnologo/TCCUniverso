@@ -16,7 +16,7 @@ class _AnunciosState extends State<Anuncios> {
       case "Entrar / Cadastrar":
         Navigator.pushNamed(context, "/login");
         break;
-      case "Deslogar":
+      case "Sair":
       _deslogarUsuario();
         break;
     }
@@ -36,7 +36,7 @@ class _AnunciosState extends State<Anuncios> {
         itensMenu = ["Entrar / Cadastrar"
         ];
       }else{
-        itensMenu = ["Meus anúncios","Deslogar"];
+        itensMenu = ["Meus anúncios","Sair"];
       }
   }
   @override
