@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_test_app/models/Usuario.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'CustomInput.dart';
 
 class Home extends StatefulWidget {
@@ -11,7 +14,29 @@ class _HomeState extends State<Home> {
   TextEditingController _controllerSenha = new TextEditingController(text: "123mudar");
 
   bool _cadastrar = false;
-  String _mensagemErro = "Preencha a senha!";
+  String _mensagemErro = "";
+  String _textBotao = "Entrar";
+
+   // Métodos
+  _cadastrarUsuario(Usuario usuario) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    auth.createUserWithEmailAndPassword(
+      email: usuario.email,
+      password: usuario.senha
+      ).then((firebaseUser) {
+        // Redireciona para tela Principal
+
+      });
+  }
+  _logarUsuario(Usuario usuario) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    auth.signInWithEmailAndPassword(
+      email: usuario.email,
+      password: usuario.senha
+      ).then((firebaseUser){
+        // Redireciona para tela Principal
+      });
+  }
 
   _validarCampos(){
     // Recuperar dados dos campos
@@ -20,7 +45,17 @@ class _HomeState extends State<Home> {
 
     if(email.isNotEmpty && email.contains("@")){
       if(senha.isNotEmpty && senha.length > 6){
+        // Configurar usuário
+        Usuario usuario = Usuario();
+        usuario.email = email;
+        usuario.senha = senha;
+
         // Cadastrar ou logar
+        if(_cadastrar){
+          _cadastrarUsuario(usuario);
+        }else{
+          _logarUsuario(usuario);
+        }
       }else{
         setState(() {
           _mensagemErro = "Preencha a senha! mínimo de 6 caractéres.";
@@ -77,15 +112,20 @@ Widget build(BuildContext context) {
                       onChanged: (bool valor){
                         setState((){
                           _cadastrar = valor;
+                          _textBotao = "Entrar";
+                          if(_cadastrar ){
+                              //* Se cadastrar for igual a TRUE = Cadastrar *//
+                              _textBotao = "Cadastrar";
+                          }
                         });
                       },
                   ),// Switch
                   Text("Cadastrar"),
                   ]
               ),
-              ElevatedButton(
+              RaisedButton(
                 child: Text(
-                  "Entrar",
+                  _textBotao,
                   style: TextStyle(
                     color: Colors.white, fontSize: 20
                   ), // TextStyle
@@ -93,9 +133,17 @@ Widget build(BuildContext context) {
                 color: Color(0xff9c27b0),
                 padding: EdgeInsets.fromLTRB(32,16,32,16),
                 onPressed: (){
-
+                  _validarCampos();
                 },
-              )// ElevatedButton
+              ),
+              Padding(
+                padding: EdgeInsets.only(top:20),
+                child: Text(_mensagemErro, style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red
+                ),),
+                )// ElevatedButton
             ],
           ),
         )
