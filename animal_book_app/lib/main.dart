@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_test_app/views/Anuncios.dart';
-import 'package:flutter_test_app/views/Login.dart';
-import 'package:flutter_test_app/views/Home.dart';
+import 'package:animal_book_app/views/Anuncios.dart';
+import 'package:animal_book_app/views/Login.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'RouteGenerator.dart';
@@ -17,7 +16,7 @@ void main() async{
 
   runApp(MaterialApp(
     title: "Animal Book",
-    home: Home(),
+    home: Anuncios(),
     theme: temaPadrao,
     initialRoute: "/",
     onGenerateRoute: RouteGenerator.generateRoute,

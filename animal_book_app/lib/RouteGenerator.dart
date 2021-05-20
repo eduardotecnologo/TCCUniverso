@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_test_app/views/Anuncios.dart';
-import 'package:flutter_test_app/views/Login.dart';
+import 'package:animal_book_app/views/Anuncios.dart';
+import 'package:animal_book_app/views/Login.dart';
 
 class RouteGenerator{
+  // Método para gerar as Rotas
   static Route<dynamic> generateRoute(RouteSettings settings){
     final args = settings.arguments;
     switch( settings.name){
