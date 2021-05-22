@@ -1,7 +1,8 @@
+import 'package:animal_book_app/views/widgets/CustomButtom.dart';
 import 'package:flutter/material.dart';
 import 'package:animal_book_app/models/Usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'CustomInput.dart';
+import 'widgets/CustomInput.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -122,16 +123,9 @@ class _LoginState extends State<Login> {
                   Text("Cadastrar"),
                 ],
               ),
-              RaisedButton(
-                child: Text(
-                  _textBotao,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20),
-                ),
-                color: Color(0xffff8c1a),
-                padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
-                onPressed: () {
+              CustomButton(
+                texto: _textBotao,
+                onPressed: (){
                   _validarCampos();
                 },
               ),
