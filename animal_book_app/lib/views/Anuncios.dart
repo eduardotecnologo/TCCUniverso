@@ -10,7 +10,7 @@ class _AnunciosState extends State<Anuncios> {
 
   _escolhaMenuItem(String itemEscolhido){
     switch( itemEscolhido ){
-      case "Meus anúncios" :
+      case "Meus posts" :
         Navigator.pushNamed(context, "/meus-anuncios");
         break;
       case "Entrar / Cadastrar":
@@ -67,7 +67,7 @@ class _AnunciosState extends State<Anuncios> {
         ],
       ),
       body: Container(
-        child: Text("Anuncios"),
+        child: Text("Encontre um amiguinho(a)"),
       ),
     );
   }
