@@ -6,6 +6,8 @@ A new Flutter project.
 ## Update
 [] RaisedButton
 []
+## Run Emulator
+emulator -avd NameOfYourDevice -dns-server 8.8.8.8
 
 This project is a starting point for a Flutter application.
 

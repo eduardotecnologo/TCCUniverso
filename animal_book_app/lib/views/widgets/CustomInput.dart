@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class  CustomInput extends StatelessWidget {
-
   final TextEditingController controller;
   final String hint;
   final bool obscure;

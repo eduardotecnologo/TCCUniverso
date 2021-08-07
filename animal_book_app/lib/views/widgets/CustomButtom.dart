@@ -20,7 +20,8 @@ class CustomButton extends StatelessWidget {
                   this.texto,
                   style: TextStyle(
                     color: this.corTexto,
-                    fontSize: 20),
+                    fontSize: 20
+                    ),
                 ),
                 color: Color(0xffff8c1a),
                 padding: EdgeInsets.fromLTRB(32, 16, 32, 16),

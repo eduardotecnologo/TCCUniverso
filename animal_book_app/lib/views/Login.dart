@@ -47,7 +47,7 @@ class _LoginState extends State<Login> {
     String senha = _controllerSenha.text;
 
     if (email.isNotEmpty && email.contains("@")) {
-      if (senha.isNotEmpty && senha.length > 6) {
+      if (senha.isNotEmpty && senha.length >= 6) {
         // Configurar um Usuário
         Usuario usuario = Usuario();
         usuario.email = email;
@@ -60,7 +60,7 @@ class _LoginState extends State<Login> {
         }
       } else {
         setState(() {
-          _mensagemErro = "Preencha a senha! digite mais de 6 caracteres";
+          _mensagemErro = "Preencha a senha! digite mais de 6 caracteres!";
         });
       }
     } else {
@@ -104,7 +104,9 @@ class _LoginState extends State<Login> {
                 ],
               ),
               CustomInput(
-                  controller: _controllerSenha, hint: "Senha", obscure: true),
+                  controller: _controllerSenha,
+                  hint: "Senha",
+                  obscure: true),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
