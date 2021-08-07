@@ -36,7 +36,7 @@ class RouteGenerator{
             title: Text("Tela não encontrada!"),
             ),
             body: Center(
-              child: Text("Tela não encontrada"),
+              child: Text("Tela não encontrada!"),
             ),
         );
       }

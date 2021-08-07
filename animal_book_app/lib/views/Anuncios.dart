@@ -22,6 +22,7 @@ class _AnunciosState extends State<Anuncios> {
     }
   }
 
+  // Sair da conta
   _deslogarUsuario() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     await auth.signOut();
@@ -33,10 +34,13 @@ class _AnunciosState extends State<Anuncios> {
     User usuarioLogado = await auth.currentUser;
 
       if( usuarioLogado == null){
-        itensMenu = ["Entrar / Cadastrar"
+        itensMenu = [
+          "Entrar / Cadastrar"
         ];
       }else{
-        itensMenu = ["Meus anúncios","Sair"];
+        itensMenu = [
+          "Meus Posts","Sair"
+          ];
       }
   }
   @override
