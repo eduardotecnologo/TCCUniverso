@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class Anuncios extends StatefulWidget {
+class Posts extends StatefulWidget {
   @override
-  _AnunciosState createState() => _AnunciosState();
+  _PostsState createState() => _PostsState();
 }
-class _AnunciosState extends State<Anuncios> {
+class _PostsState extends State<Posts> {
   List<String> itensMenu = [];
 
   _escolhaMenuItem(String itemEscolhido){
     switch( itemEscolhido ){
-      case "Meus posts" :
-        Navigator.pushNamed(context, "/meus-anuncios");
+      case "Meus Posts" :
+        Navigator.pushNamed(context, "/meus-posts");
         break;
       case "Entrar / Cadastrar":
         Navigator.pushNamed(context, "/login");
@@ -71,7 +71,7 @@ class _AnunciosState extends State<Anuncios> {
         ],
       ),
       body: Container(
-        child: Text("Encontre um amiguinho(a)"),
+        child: Text("Tela de posts"),
       ),
     );
   }

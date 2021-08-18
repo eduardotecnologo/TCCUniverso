@@ -136,9 +136,9 @@ class _LoginState extends State<Login> {
                 child: Text(
                   _mensagemErro,
                   style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red),
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red),
                 ),
               )
             ],

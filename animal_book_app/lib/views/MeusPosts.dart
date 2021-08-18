@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class MeusAnuncios extends StatefulWidget {
+class MeusPosts extends StatefulWidget {
   @override
-  _MeusAnunciosState createState() => _MeusAnunciosState();
+  _MeusPostsState createState() => _MeusPostsState();
 }
 
-class _MeusAnunciosState extends State<MeusAnuncios> {
+class _MeusPostsState extends State<MeusPosts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,10 +16,12 @@ class _MeusAnunciosState extends State<MeusAnuncios> {
         foregroundColor:Colors.white,
         child: Icon(Icons.add),
         onPressed: (){
-          Navigator.pushNamed(context, "/novo-anuncio");
+          Navigator.pushNamed(context, "/novo-post");
         },
       ),
-      body: Container(),
+      body: Container(
+        child: Text("Meus Posts"),
+      ),
     );
   }
 }

@@ -7,7 +7,9 @@ A new Flutter project.
 [] RaisedButton
 []
 ## Run Emulator
-emulator -avd NameOfYourDevice -dns-server 8.8.8.8
+emulator -list-avds
+Pixel_4_API_30
+emulator -avd Pixel_4_API_30 -dns-server 8.8.8.8
 
 This project is a starting point for a Flutter application.
 
