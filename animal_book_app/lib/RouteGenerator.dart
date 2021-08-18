@@ -1,8 +1,8 @@
-import 'package:animal_book_app/views/MeusAnuncios.dart';
-import 'package:animal_book_app/views/NovoAnuncio.dart';
+import 'package:animal_book_app/views/MeusPosts.dart';
+import 'package:animal_book_app/views/NovoPost.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:animal_book_app/views/Anuncios.dart';
+import 'package:animal_book_app/views/posts.dart';
 import 'package:animal_book_app/views/Login.dart';
 
 class RouteGenerator{
@@ -12,18 +12,18 @@ class RouteGenerator{
     switch( settings.name){
       case "/" :
       return MaterialPageRoute(
-        builder: (_) => Anuncios()
+        builder: (_) => Posts()
         );
         case "/login":
         return MaterialPageRoute(
           builder: (_) => Login()
        );
-       case "/meus-anuncios":
+       case "/meus-posts":
         return MaterialPageRoute(
-          builder: (_) => MeusAnuncios());
-       case "/novo-anuncio":
+          builder: (_) => MeusPosts());
+       case "/novo-post":
         return MaterialPageRoute(
-          builder: (_) => NovoAnuncio());
+          builder: (_) => NovoPost());
        default:
        _erroRota();
     }
@@ -36,7 +36,7 @@ class RouteGenerator{
             title: Text("Tela não encontrada!"),
             ),
             body: Center(
-              child: Text("Tela não encontrada"),
+              child: Text("Tela não encontrada!"),
             ),
         );
       }
