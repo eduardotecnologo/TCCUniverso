@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:animal_book_app/views/widgets/CustomButtom.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:animal_book_app/views/widgets/CustomButtom.dart';
 
 class NovoPost extends StatefulWidget {
   @override
@@ -11,9 +12,16 @@ class _NovoPostState extends State<NovoPost> {
   List<File> _listaImagens = [];
 
   final _formKey = GlobalKey<FormState>();
-  _selecionarImagemGaleria(){
 
+  _selecionarImagemGaleria() async {
+    File imagemSelecionada = await ImagePicker.pickImage(source: ImageSource.gallery);
+      if( imagemSelecionada != null){
+        setState((){
+          _listaImagens.add( imagemSelecionada );
+        });
+      }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,8 +83,42 @@ class _NovoPostState extends State<NovoPost> {
                                 );
                             }
                             if( _listaImagens.length > 0){
-
-                          }
+                            return Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: GestureDetector(
+                                onTap: (){
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: <Widget>[
+                                        Image.file( _listaImagens[indice]),
+                                        FlatButton(
+                                          child: Text("Excluir"),
+                                           textColor: Colors.red,
+                                           onPressed: (){
+                                             setState(() {
+                                             _listaImagens.removeAt(indice);
+                                             Navigator.of(context).pop();
+                                             });
+                                           },),
+                                        ],
+                                      ),
+                                    )
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  radius: 50,
+                                  backgroundImage: FileImage( _listaImagens[indice]),
+                                  child: Container(
+                                    color: Color.fromRGBO(255, 255, 255, 0.4),
+                                    alignment: Alignment.center,
+                                    child: Icon(Icons.delete, color: Colors.red,)                                ),
+                              ),
+                            ),
+                          );
+                        }
                           return Container();
                         }
                       ),
