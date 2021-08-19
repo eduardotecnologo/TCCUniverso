@@ -7,7 +7,6 @@ class Posts extends StatefulWidget {
 }
 class _PostsState extends State<Posts> {
   List<String> itensMenu = [];
-
   _escolhaMenuItem(String itemEscolhido){
     switch( itemEscolhido ){
       case "Meus Posts" :
