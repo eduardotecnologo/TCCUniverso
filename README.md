@@ -3,5 +3,7 @@ App feito em Flutter para TCC de Sistemas de informação 2021 Universo Juiz de 
 
 # Tela de Login
 ![alt text](animal_book_app/screens/login.png)
-# Tela de Anuncios
+# Tela de Postagens
 ![alt text](animal_book_app/screens/Anuncios01.png)
+# Tela de Nova Postagem
+![alt text](animal_book_app/screens/NovaPostagem01.png)
