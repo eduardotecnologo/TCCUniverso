@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:animal_book_app/views/widgets/CustomButtom.dart';
+import 'package:validadores/Validador.dart';
 
 class NovoPost extends StatefulWidget {
   @override
@@ -10,8 +12,13 @@ class NovoPost extends StatefulWidget {
 
 class _NovoPostState extends State<NovoPost> {
   List<File> _listaImagens = [];
+  List<DropdownMenuItem<String>> _listaItensDropEstados = [];
+  List<DropdownMenuItem<String>> _listaItensDropBichinhos = [];
 
   final _formKey = GlobalKey<FormState>();
+
+  String _itemSelecionadoEstado;
+  String _itemSelecionadoBichinho;
 
   _selecionarImagemGaleria() async {
     File imagemSelecionada = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -20,6 +27,30 @@ class _NovoPostState extends State<NovoPost> {
           _listaImagens.add( imagemSelecionada );
         });
       }
+  }
+
+  // Select Estados
+  @override
+  void initState(){
+    // TODO: implement initState
+    super.initState();
+    _carregarItensDropdown();
+
+  }
+
+  _carregarItensDropdown(){
+
+    // Bichinhos
+    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Cachorro(a)"), value: "pet",));
+    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Gato(a)"),value: "pet",));
+    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Passaros"),value: "pet",));
+
+    //Estados
+    for( var estado in Estados.listaEstadosSigla ){
+      _listaItensDropEstados.add(
+        DropdownMenuItem(child: Text(estado), value: estado,
+      ));
+    }
   }
 
   @override
@@ -137,9 +168,57 @@ class _NovoPostState extends State<NovoPost> {
               ),
               //Menus Dropdown
               Row(children: <Widget>[
-                Text("Estado"),
-                Text("Bichinho"),
-              ],),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: DropdownButtonFormField(
+                      value: _itemSelecionadoEstado,
+                      hint: Text("Estados"),
+                      style: TextStyle(
+                        color:  Colors.black,
+                        fontSize: 20,
+                        ),
+                      items: _listaItensDropEstados,
+                      validator: (value){
+                        return Validador()
+                        .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
+                        .valido(value);
+                      },
+                      onChanged: (value){
+                        setState(() {
+                          _itemSelecionadoEstado = value;
+                        });
+                      },
+                    ),
+                    ),
+                  ),
+                Expanded( // Item selecionado Bichinho
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: DropdownButtonFormField(
+                          value: _itemSelecionadoBichinho,
+                          hint: Text("Pet"),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                          ),
+                          items: _listaItensDropBichinhos,
+                          validator: (value) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo Obrigatório!")
+                                .valido(value);
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _itemSelecionadoBichinho = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                ],
+              ),
               //Caixas de textos e botões
               Text("Caixas de textos"),
               CustomButton(

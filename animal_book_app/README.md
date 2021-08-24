@@ -11,6 +11,10 @@ emulator -list-avds
 Pixel_4_API_30
 emulator -avd Pixel_4_API_30 -dns-server 8.8.8.8
 
+## Update
+** FlatButton
+** pickImage
+
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
