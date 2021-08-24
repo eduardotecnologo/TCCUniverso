@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:animal_book_app/views/widgets/CustomButtom.dart';
+import 'package:animal_book_app/views/widgets/CustomInput.dart';
 import 'package:validadores/Validador.dart';
 
 class NovoPost extends StatefulWidget {
@@ -14,11 +16,17 @@ class _NovoPostState extends State<NovoPost> {
   List<File> _listaImagens = [];
   List<DropdownMenuItem<String>> _listaItensDropEstados = [];
   List<DropdownMenuItem<String>> _listaItensDropBichinhos = [];
+  List<DropdownMenuItem<String>> _listaItensDropSexo = [];
+  List<DropdownMenuItem<String>> _listaItensDropCastramento = [];
+  List<DropdownMenuItem<String>> _listaItensDropPorte = [];
 
   final _formKey = GlobalKey<FormState>();
 
   String _itemSelecionadoEstado;
   String _itemSelecionadoBichinho;
+  String _itemSelecionadoSexo;
+  String _itemSelecionadoCastramento;
+  String _itemSelecionadoPorte;
 
   _selecionarImagemGaleria() async {
     File imagemSelecionada = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -39,11 +47,22 @@ class _NovoPostState extends State<NovoPost> {
   }
 
   _carregarItensDropdown(){
-
     // Bichinhos
-    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Cachorro(a)"), value: "pet",));
-    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Gato(a)"),value: "pet",));
-    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Passaros"),value: "pet",));
+    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Cão"), value: "cachorro",));
+    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Gato"),value: "gato",));
+
+    // Sexo
+    _listaItensDropSexo.add(DropdownMenuItem(child: Text("Macho"),value: "macho",));
+    _listaItensDropSexo.add(DropdownMenuItem(child: Text("Fêmea"),value: "femea",));
+
+    // Castramento
+    _listaItensDropCastramento.add(DropdownMenuItem(child: Text("Sim"),value: "sim",));
+    _listaItensDropCastramento.add(DropdownMenuItem(child: Text("Não"),value: "nao",));
+
+    // Porte
+    _listaItensDropPorte.add(DropdownMenuItem(child: Text("Pequeno"),value: "pequeno",));
+    _listaItensDropPorte.add(DropdownMenuItem(child: Text("Médio"),value: "medio",));
+    _listaItensDropPorte.add(DropdownMenuItem(child: Text("Grande"),value: "grande",));
 
     //Estados
     for( var estado in Estados.listaEstadosSigla ){
@@ -166,17 +185,17 @@ class _NovoPostState extends State<NovoPost> {
                   ],);
                 },
               ),
-              //Menus Dropdown
+              //Menus Dropdown 01
               Row(children: <Widget>[
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(8),
                     child: DropdownButtonFormField(
                       value: _itemSelecionadoEstado,
-                      hint: Text("Estados"),
+                      hint: Text("Estado"),
                       style: TextStyle(
                         color:  Colors.black,
-                        fontSize: 20,
+                        fontSize: 16,
                         ),
                       items: _listaItensDropEstados,
                       validator: (value){
@@ -200,7 +219,7 @@ class _NovoPostState extends State<NovoPost> {
                           hint: Text("Pet"),
                           style: TextStyle(
                             color: Colors.black,
-                            fontSize: 20,
+                            fontSize: 16,
                           ),
                           items: _listaItensDropBichinhos,
                           validator: (value) {
@@ -217,10 +236,183 @@ class _NovoPostState extends State<NovoPost> {
                         ),
                       ),
                     ),
+
+                    Expanded(
+                      // Item selecionado Sexo
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: DropdownButtonFormField(
+                          value: _itemSelecionadoSexo,
+                          hint: Text("Genero"),
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                          items: _listaItensDropSexo,
+                          validator: (value) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo Obrigatório!")
+                                .valido(value);
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _itemSelecionadoSexo = value;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
                 ],
               ),
-              //Caixas de textos e botões
-              Text("Caixas de textos"),
+              //Menus Dropdown 02
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: DropdownButtonFormField(
+                        value: _itemSelecionadoCastramento,
+                        hint: Text("Castrado"),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                        items: _listaItensDropCastramento,
+                        validator: (value) {
+                          return Validador()
+                              .add(Validar.OBRIGATORIO,
+                                  msg: "Campo Obrigatório!")
+                              .valido(value);
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _itemSelecionadoCastramento = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    // Item selecionado Porte
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: DropdownButtonFormField(
+                        value: _itemSelecionadoPorte,
+                        hint: Text("Porte"),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                        items: _listaItensDropPorte,
+                        validator: (value) {
+                          return Validador()
+                              .add(Validar.OBRIGATORIO,
+                                  msg: "Campo Obrigatório!")
+                              .valido(value);
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _itemSelecionadoPorte = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    // Item selecionado Sexo
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: DropdownButtonFormField(
+                        value: _itemSelecionadoSexo,
+                        hint: Text("Cidade"),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                        items: _listaItensDropSexo,
+                        validator: (value) {
+                          return Validador()
+                              .add(Validar.OBRIGATORIO,
+                                  msg: "Campo Obrigatório!")
+                              .valido(value);
+                        },
+                        onChanged: (value) {
+                          setState(() {
+                            _itemSelecionadoSexo = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            //Caixas de texto Cidade
+              Padding(
+                padding: EdgeInsets.only(bottom: 15, top: 15),
+                  child: CustomInput(
+                  hint: "Cidade",
+                  validator: (value){
+                    return Validador()
+                      .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
+                      .valido(value);
+                  },
+                ),
+              ),
+              //Caixas de texto Nome
+              Padding(
+                padding: EdgeInsets.only(bottom: 15),
+                child: CustomInput(
+                  hint: "Nome do Pet",
+                  validator: (value) {
+                    return Validador()
+                        .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
+                        .valido(value);
+                  },
+                ),
+              ),
+              //Caixas de texto Nome
+              Padding(
+                  padding: EdgeInsets.only(bottom: 15),
+                  child: CustomInput(
+                    hint: "Nome do Abrigo",
+                    validator: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
+                          .valido(value);
+                    },
+                  ),
+                ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 15),
+                child: CustomInput(
+                  hint: "Contato",
+                  type: TextInputType.phone,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    TelefoneInputFormatter()
+                  ],
+                  validator: (value) {
+                    return Validador()
+                        .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
+                        .valido(value);
+                  },
+                ),
+              ),
+              //Caixas de texto Descrição
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15),
+                  child: CustomInput(
+                    hint: "Descrição (200 caractéres)",
+                    maxLines: null,
+                    validator: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
+                          .maxLength(200, msg:"Máximo de 200 caractéres")
+                          .valido(value);
+                    },
+                  ),
+                ),
               CustomButton(
                   texto: "Criar novo post",
                   onPressed: () {
