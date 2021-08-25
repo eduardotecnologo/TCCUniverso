@@ -1,5 +1,9 @@
 import 'dart:io';
+import 'package:animal_book_app/models/Post.dart';
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +25,7 @@ class _NovoPostState extends State<NovoPost> {
   List<DropdownMenuItem<String>> _listaItensDropPorte = [];
 
   final _formKey = GlobalKey<FormState>();
+  Post _post;
 
   String _itemSelecionadoEstado;
   String _itemSelecionadoBichinho;
@@ -37,13 +42,41 @@ class _NovoPostState extends State<NovoPost> {
       }
   }
 
+  //Save Post
+  _savePost() async{
+    //Upload Images in Storage
+    await _uploadImages();
+    print("lista imagens: ${_post.fotos.toString()}");
+
+    //Upload Posts in Firestorage
+  }
+  Future _uploadImages() async {
+    FirebaseStorage storage = FirebaseStorage.instance;
+    Reference rootFolder = storage.ref();
+
+    for( var imagem in _listaImagens){
+      String nameImage = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference file = rootFolder
+        .child("my_posts")
+        .child( _post.id )
+        .child(nameImage);
+
+        //Upload Refactory
+        UploadTask task = file.putFile(imagem);
+        // StorageUploadTask uploadTask = file.putFile(imagem);
+        // StorageTaskSnapshot taskSnapshot = await UploadTask.onComplete;
+        // String url = await taskSnapshot.ref.getDownloadURL();
+        // _post.fotos.add(url);
+    }
+  }
+
   // Select Estados
   @override
   void initState(){
     // TODO: implement initState
     super.initState();
     _carregarItensDropdown();
-
+    _post = Post();
   }
 
   _carregarItensDropdown(){
@@ -193,6 +226,9 @@ class _NovoPostState extends State<NovoPost> {
                     child: DropdownButtonFormField(
                       value: _itemSelecionadoEstado,
                       hint: Text("Estado"),
+                      onSaved: (estado){
+                        _post.estado = estado;
+                      },
                       style: TextStyle(
                         color:  Colors.black,
                         fontSize: 16,
@@ -217,6 +253,9 @@ class _NovoPostState extends State<NovoPost> {
                         child: DropdownButtonFormField(
                           value: _itemSelecionadoBichinho,
                           hint: Text("Pet"),
+                          onSaved: (pet) {
+                            _post.pet = pet;
+                          },
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 16,
@@ -244,6 +283,9 @@ class _NovoPostState extends State<NovoPost> {
                         child: DropdownButtonFormField(
                           value: _itemSelecionadoSexo,
                           hint: Text("Genero"),
+                          onSaved: (genero) {
+                            _post.genero = genero;
+                          },
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 16,
@@ -273,7 +315,10 @@ class _NovoPostState extends State<NovoPost> {
                       padding: EdgeInsets.all(8),
                       child: DropdownButtonFormField(
                         value: _itemSelecionadoCastramento,
-                        hint: Text("Castrado"),
+                        hint: Text("Castramento"),
+                          onSaved: (castrado) {
+                            _post.castrado = castrado;
+                          },
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -300,6 +345,9 @@ class _NovoPostState extends State<NovoPost> {
                       child: DropdownButtonFormField(
                         value: _itemSelecionadoPorte,
                         hint: Text("Porte"),
+                         onSaved: (porte) {
+                            _post.porte = porte;
+                          },
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 16,
@@ -319,32 +367,32 @@ class _NovoPostState extends State<NovoPost> {
                       ),
                     ),
                   ),
-                  Expanded(
-                    // Item selecionado Sexo
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: DropdownButtonFormField(
-                        value: _itemSelecionadoSexo,
-                        hint: Text("Cidade"),
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),
-                        items: _listaItensDropSexo,
-                        validator: (value) {
-                          return Validador()
-                              .add(Validar.OBRIGATORIO,
-                                  msg: "Campo Obrigatório!")
-                              .valido(value);
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            _itemSelecionadoSexo = value;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
+                  // Expanded(
+                  //   // Item selecionado Sexo
+                  //   child: Padding(
+                  //     padding: EdgeInsets.all(8),
+                  //     child: DropdownButtonFormField(
+                  //       value: _itemSelecionadoSexo,
+                  //       hint: Text("Cidade"),
+                  //       style: TextStyle(
+                  //         color: Colors.black,
+                  //         fontSize: 16,
+                  //       ),
+                  //       items: _listaItensDropSexo,
+                  //       validator: (value) {
+                  //         return Validador()
+                  //             .add(Validar.OBRIGATORIO,
+                  //                 msg: "Campo Obrigatório!")
+                  //             .valido(value);
+                  //       },
+                  //       onChanged: (value) {
+                  //         setState(() {
+                  //           _itemSelecionadoSexo = value;
+                  //         });
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             //Caixas de texto Cidade
@@ -352,6 +400,9 @@ class _NovoPostState extends State<NovoPost> {
                 padding: EdgeInsets.only(bottom: 15, top: 15),
                   child: CustomInput(
                   hint: "Cidade",
+                  onSaved: (cidade) {
+                      _post.cidade = cidade;
+                    },
                   validator: (value){
                     return Validador()
                       .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
@@ -364,6 +415,9 @@ class _NovoPostState extends State<NovoPost> {
                 padding: EdgeInsets.only(bottom: 15),
                 child: CustomInput(
                   hint: "Nome do Pet",
+                  onSaved: (nomePet) {
+                      _post.nomePet = nomePet;
+                    },
                   validator: (value) {
                     return Validador()
                         .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
@@ -376,6 +430,9 @@ class _NovoPostState extends State<NovoPost> {
                   padding: EdgeInsets.only(bottom: 15),
                   child: CustomInput(
                     hint: "Nome do Abrigo",
+                    onSaved: (nomeAbrigo) {
+                      _post.nomeAbrigo = nomeAbrigo;
+                    },
                     validator: (value) {
                       return Validador()
                           .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
@@ -387,6 +444,9 @@ class _NovoPostState extends State<NovoPost> {
                 padding: EdgeInsets.only(bottom: 15),
                 child: CustomInput(
                   hint: "Contato",
+                  onSaved: (contato) {
+                      _post.contato = contato;
+                    },
                   type: TextInputType.phone,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
@@ -404,12 +464,15 @@ class _NovoPostState extends State<NovoPost> {
                   padding: EdgeInsets.only(bottom: 15),
                   child: CustomInput(
                     hint: "Descrição (200 caractéres)",
+                    onSaved: (descricao) {
+                      _post.descricao = descricao;
+                    },
                     maxLines: null,
                     validator: (value) {
                       return Validador()
-                          .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
-                          .maxLength(200, msg:"Máximo de 200 caractéres")
-                          .valido(value);
+                        .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
+                        .maxLength(200, msg:"Máximo de 200 caractéres")
+                        .valido(value);
                     },
                   ),
                 ),
@@ -417,7 +480,11 @@ class _NovoPostState extends State<NovoPost> {
                   texto: "Criar novo post",
                   onPressed: () {
                     if( _formKey.currentState.validate()){
+                      // Save Fields
+                      _formKey.currentState.save();
 
+                      //Save Post
+                      _savePost();
                     }
                   },
                 ),
