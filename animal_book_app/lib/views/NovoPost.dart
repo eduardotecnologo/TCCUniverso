@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'package:animal_book_app/models/Post.dart';
 import 'package:brasil_fields/brasil_fields.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -42,13 +43,27 @@ class _NovoPostState extends State<NovoPost> {
       }
   }
 
-  //Save Post
+    // Save Post
   _savePost() async{
-    //Upload Images in Storage
+    // Upload Images in Storage
     await _uploadImages();
-    print("lista imagens: ${_post.fotos.toString()}");
 
-    //Upload Posts in Firestorage
+    // Save Posts in Firestore
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User usuarioLogado = await auth.currentUser;
+    String idUsuarioLogado = usuarioLogado.uid;
+
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    db.collection("my_posts")
+      .doc(idUsuarioLogado)
+      .collection("posts")
+      .doc( _post.id)
+      .set( _post.toMap()).then((_){
+        Navigator.pushReplacementNamed(context, "/meus-posts");
+      });
+
+
+    // Upload Posts in Firestorage
   }
   Future _uploadImages() async {
     FirebaseStorage storage = FirebaseStorage.instance;
@@ -65,8 +80,8 @@ class _NovoPostState extends State<NovoPost> {
         UploadTask task = file.putFile(imagem);
         // StorageUploadTask uploadTask = file.putFile(imagem);
         // StorageTaskSnapshot taskSnapshot = await UploadTask.onComplete;
-        // String url = await taskSnapshot.ref.getDownloadURL();
-        // _post.fotos.add(url);
+        String url = await (await task).ref.getDownloadURL();
+        _post.fotos.add(url);
     }
   }
 
@@ -407,7 +422,7 @@ class _NovoPostState extends State<NovoPost> {
                     return Validador()
                       .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
                       .valido(value);
-                  },
+                  }, controller: null,
                 ),
               ),
               //Caixas de texto Nome
@@ -422,7 +437,7 @@ class _NovoPostState extends State<NovoPost> {
                     return Validador()
                         .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
                         .valido(value);
-                  },
+                  }, controller: null,
                 ),
               ),
               //Caixas de texto Nome
@@ -437,7 +452,7 @@ class _NovoPostState extends State<NovoPost> {
                       return Validador()
                           .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
                           .valido(value);
-                    },
+                    }, controller: null,
                   ),
                 ),
               Padding(
@@ -456,7 +471,7 @@ class _NovoPostState extends State<NovoPost> {
                     return Validador()
                         .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
                         .valido(value);
-                  },
+                  }, controller: null,
                 ),
               ),
               //Caixas de texto Descrição
@@ -467,13 +482,13 @@ class _NovoPostState extends State<NovoPost> {
                     onSaved: (descricao) {
                       _post.descricao = descricao;
                     },
-                    maxLines: null,
+                    maxLines: 1,
                     validator: (value) {
                       return Validador()
                         .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
                         .maxLength(200, msg:"Máximo de 200 caractéres")
                         .valido(value);
-                    },
+                    }, controller: null,
                   ),
                 ),
               CustomButton(
