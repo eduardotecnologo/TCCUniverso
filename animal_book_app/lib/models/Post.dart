@@ -23,6 +23,24 @@ class Post {
     this.fotos = [];
   }
 
+  Map<String, dynamic> toMap(){
+    Map<String, dynamic> map ={
+      "id":this.id,
+      "estado":this.estado,
+      "pet":this.pet,
+      "genero":this.genero,
+      "castrado":this.castrado,
+      "porte":this.porte,
+      "cidade":this.cidade,
+      "nomePet":this.nomePet,
+      "nomeAbrigo":this.nomeAbrigo,
+      "contato":this.contato,
+      "descricao":this.descricao,
+      "fotos":this.fotos
+    };
+    return map;
+  }
+
   String get id => _id;
   set id(String value) {
     _id = value;

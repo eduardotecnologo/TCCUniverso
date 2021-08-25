@@ -22,7 +22,7 @@ class  CustomInput extends StatelessWidget {
     this.inputFormatters,
     this.maxLines,
     this.validator,
-    this.onSaved
+    this.onSaved, bool obscureText
   });
 
   @override
