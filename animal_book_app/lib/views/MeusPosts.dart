@@ -1,3 +1,4 @@
+import 'package:animal_book_app/views/widgets/ItemPost.dart';
 import 'package:flutter/material.dart';
 
 class MeusPosts extends StatefulWidget {
@@ -19,8 +20,11 @@ class _MeusPostsState extends State<MeusPosts> {
           Navigator.pushNamed(context, "/novo-post");
         },
       ),
-      body: Container(
-        child: Text("Meus Posts"),
+      body: ListView.builder(
+          itemCount: 4,
+          itemBuilder: (_, indice){
+            return ItemPost();
+        }
       ),
     );
   }

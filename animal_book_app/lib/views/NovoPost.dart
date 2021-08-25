@@ -27,6 +27,7 @@ class _NovoPostState extends State<NovoPost> {
 
   final _formKey = GlobalKey<FormState>();
   Post _post;
+  BuildContext _dialogContext;
 
   String _itemSelecionadoEstado;
   String _itemSelecionadoBichinho;
@@ -43,8 +44,28 @@ class _NovoPostState extends State<NovoPost> {
       }
   }
 
+  _openDialog(BuildContext context){
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder:(BuildContext context){
+        return AlertDialog(
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+            CircularProgressIndicator(),
+            SizedBox(height: 20,),
+            Text("Salvando anúncio...")
+            ],
+          ),
+        );
+      }
+    );
+  }
+
     // Save Post
   _savePost() async{
+    _openDialog( _dialogContext );
     // Upload Images in Storage
     await _uploadImages();
 
@@ -59,7 +80,8 @@ class _NovoPostState extends State<NovoPost> {
       .collection("posts")
       .doc( _post.id)
       .set( _post.toMap()).then((_){
-        Navigator.pushReplacementNamed(context, "/meus-posts");
+        Navigator.pop(_dialogContext);
+        Navigator.pop(context);
       });
 
 
@@ -492,11 +514,14 @@ class _NovoPostState extends State<NovoPost> {
                   ),
                 ),
               CustomButton(
-                  texto: "Criar novo post",
+                  texto: "Cadastrar novo animalzinho",
                   onPressed: () {
                     if( _formKey.currentState.validate()){
                       // Save Fields
                       _formKey.currentState.save();
+
+                      // Setup Context Dialog
+                      _dialogContext = context;
 
                       //Save Post
                       _savePost();
