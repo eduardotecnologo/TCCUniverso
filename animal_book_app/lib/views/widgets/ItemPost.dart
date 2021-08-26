@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:animal_book_app/models/Post.dart';
 
+// ignore: must_be_immutable
 class ItemPost extends StatelessWidget {
 
-  @override
+  Post post;
+  VoidCallback onTapItem;
+  VoidCallback onPressedRemover;
+
+  ItemPost(
+    {
+      @required this.post,
+      this.onTapItem,
+      this.onPressedRemover
+    });
+
+      @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){},
+      onTap: this.onTapItem,
       child: Card(
         child: Padding(
           padding: EdgeInsets.all(12),
@@ -14,7 +27,10 @@ class ItemPost extends StatelessWidget {
             SizedBox(
               width: 120,
               height: 120,
-              child: Container(color: Colors.orangeAccent),
+              child: Image.network(
+                post.fotos[0],
+                fit: BoxFit.cover,
+              ),
             ),
             //Name Abrigo e do animal
             Expanded(
@@ -25,22 +41,22 @@ class ItemPost extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                     Text(
-                      "Casado do Caramelo",
+                      post.nomeAbrigo,
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold),
                       ),
-                    Text("Caramelo"),
+                    Text(post.estado),
                   ],
                   ),
                 ),
               ),
-            Expanded(
+            if(this.onPressedRemover != null)Expanded(
               flex: 1,
                 child: FlatButton(
                   color: Colors.red,
                   padding: EdgeInsets.all(10),
-                  onPressed: (){},
+                  onPressed: this.onPressedRemover,
                   child: Icon(Icons.delete,color: Colors.white,),
                 ),
               )

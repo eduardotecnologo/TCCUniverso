@@ -4,7 +4,6 @@ import 'package:brasil_fields/brasil_fields.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +70,7 @@ class _NovoPostState extends State<NovoPost> {
 
     // Save Posts in Firestore
     FirebaseAuth auth = FirebaseAuth.instance;
+    // ignore: await_only_futures
     User usuarioLogado = await auth.currentUser;
     String idUsuarioLogado = usuarioLogado.uid;
 
@@ -113,7 +113,7 @@ class _NovoPostState extends State<NovoPost> {
     // TODO: implement initState
     super.initState();
     _carregarItensDropdown();
-    _post = Post();
+    _post = Post.generateId();
   }
 
   _carregarItensDropdown(){

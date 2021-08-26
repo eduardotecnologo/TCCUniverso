@@ -5,8 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'RouteGenerator.dart';
 
 final ThemeData temaPadrao = ThemeData(
-  primaryColor: Color(0xffff8c1a),
-  accentColor: Color(0xffff9933)
+  primaryColor: Color(0xffff56e4c),
+  accentColor: Color(0xffff56e4c)
 );
 
 void main() async{
