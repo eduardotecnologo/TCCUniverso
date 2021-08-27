@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:animal_book_app/Utils/Setup.dart';
 import 'package:animal_book_app/models/Post.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,7 +21,7 @@ class _NovoPostState extends State<NovoPost> {
   List<File> _listaImagens = [];
   List<DropdownMenuItem<String>> _listaItensDropEstados = [];
   List<DropdownMenuItem<String>> _listaItensDropBichinhos = [];
-  List<DropdownMenuItem<String>> _listaItensDropSexo = [];
+  List<DropdownMenuItem<String>> _listaItensDropGenero = [];
   List<DropdownMenuItem<String>> _listaItensDropCastramento = [];
   List<DropdownMenuItem<String>> _listaItensDropPorte = [];
 
@@ -30,7 +31,7 @@ class _NovoPostState extends State<NovoPost> {
 
   String _itemSelecionadoEstado;
   String _itemSelecionadoBichinho;
-  String _itemSelecionadoSexo;
+  String _itemSelecionadoGenero;
   String _itemSelecionadoCastramento;
   String _itemSelecionadoPorte;
 
@@ -80,8 +81,14 @@ class _NovoPostState extends State<NovoPost> {
       .collection("posts")
       .doc( _post.id)
       .set( _post.toMap()).then((_){
-        Navigator.pop(_dialogContext);
-        Navigator.pop(context);
+
+        // Save Posts Public
+        db.collection("posts")
+          .doc( _post.id )
+          .set( _post.toMap()).then((_) {
+            Navigator.pop(_dialogContext);
+            Navigator.pop(context);
+          });
       });
 
 
@@ -116,23 +123,11 @@ class _NovoPostState extends State<NovoPost> {
     _post = Post.generateId();
   }
 
+  // Categorias
   _carregarItensDropdown(){
-    // Bichinhos
-    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Cão"), value: "cachorro",));
-    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Gato"),value: "gato",));
-
-    // Sexo
-    _listaItensDropSexo.add(DropdownMenuItem(child: Text("Macho"),value: "macho",));
-    _listaItensDropSexo.add(DropdownMenuItem(child: Text("Fêmea"),value: "femea",));
-
-    // Castramento
-    _listaItensDropCastramento.add(DropdownMenuItem(child: Text("Sim"),value: "sim",));
-    _listaItensDropCastramento.add(DropdownMenuItem(child: Text("Não"),value: "nao",));
-
-    // Porte
-    _listaItensDropPorte.add(DropdownMenuItem(child: Text("Pequeno"),value: "pequeno",));
-    _listaItensDropPorte.add(DropdownMenuItem(child: Text("Médio"),value: "medio",));
-    _listaItensDropPorte.add(DropdownMenuItem(child: Text("Grande"),value: "grande",));
+    _listaItensDropBichinhos = Setup.getBichinhos();
+    _listaItensDropGenero = Setup.getGenero();
+    _listaItensDropPorte = Setup.getPorte();
 
     //Estados
     for( var estado in Estados.listaEstadosSigla ){
@@ -314,11 +309,11 @@ class _NovoPostState extends State<NovoPost> {
                     ),
 
                     Expanded(
-                      // Item selecionado Sexo
+                      // Item selecionado Genero
                       child: Padding(
                         padding: EdgeInsets.all(8),
                         child: DropdownButtonFormField(
-                          value: _itemSelecionadoSexo,
+                          value: _itemSelecionadoGenero,
                           hint: Text("Genero"),
                           onSaved: (genero) {
                             _post.genero = genero;
@@ -327,7 +322,7 @@ class _NovoPostState extends State<NovoPost> {
                             color: Colors.black,
                             fontSize: 16,
                           ),
-                          items: _listaItensDropSexo,
+                          items: _listaItensDropGenero,
                           validator: (value) {
                             return Validador()
                                 .add(Validar.OBRIGATORIO,
@@ -336,7 +331,7 @@ class _NovoPostState extends State<NovoPost> {
                           },
                           onChanged: (value) {
                             setState(() {
-                              _itemSelecionadoSexo = value;
+                              _itemSelecionadoGenero = value;
                             });
                           },
                         ),
@@ -404,32 +399,6 @@ class _NovoPostState extends State<NovoPost> {
                       ),
                     ),
                   ),
-                  // Expanded(
-                  //   // Item selecionado Sexo
-                  //   child: Padding(
-                  //     padding: EdgeInsets.all(8),
-                  //     child: DropdownButtonFormField(
-                  //       value: _itemSelecionadoSexo,
-                  //       hint: Text("Cidade"),
-                  //       style: TextStyle(
-                  //         color: Colors.black,
-                  //         fontSize: 16,
-                  //       ),
-                  //       items: _listaItensDropSexo,
-                  //       validator: (value) {
-                  //         return Validador()
-                  //             .add(Validar.OBRIGATORIO,
-                  //                 msg: "Campo Obrigatório!")
-                  //             .valido(value);
-                  //       },
-                  //       onChanged: (value) {
-                  //         setState(() {
-                  //           _itemSelecionadoSexo = value;
-                  //         });
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               ),
             //Caixas de texto Cidade

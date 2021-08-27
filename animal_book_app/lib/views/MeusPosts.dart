@@ -46,7 +46,11 @@ class _MeusPostsState extends State<MeusPosts> {
       .doc(idUsuarioLogado)
       .collection("posts")
       .doc(idPost)
-      .delete();
+      .delete().then((_) {
+        db.collection("posts")
+          .doc(idPost)
+          .delete();
+      });
   }
 
   @override
@@ -132,8 +136,7 @@ class _MeusPostsState extends State<MeusPosts> {
                                   _removePost(post.id);
                                   Navigator.of(context).pop();
                                 },
-                                    )
-
+                              )
                               ]
                             );
                           });
