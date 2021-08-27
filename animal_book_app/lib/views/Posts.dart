@@ -1,4 +1,9 @@
+import 'dart:async';
+
 import 'package:animal_book_app/Utils/Setup.dart';
+import 'package:animal_book_app/models/Post.dart';
+import 'package:animal_book_app/views/widgets/ItemPost.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -9,9 +14,11 @@ class Posts extends StatefulWidget {
 class _PostsState extends State<Posts> {
   List<String> itensMenu = [];
   List<DropdownMenuItem<String>> _listaItensDropBichinhos;
-  List<DropdownMenuItem<String>> _listaItensDropGenero;
+  //List<DropdownMenuItem<String>> _listaItensDropGenero;
   List<DropdownMenuItem<String>> _listaItensDropPorte;
   List<DropdownMenuItem<String>> _listaItensDropEstados;
+
+  final _controller = StreamController<QuerySnapshot>.broadcast();
 
   String _itemSelecionadoEstado;
   String _itemSelecionadoBichinho;
@@ -56,9 +63,20 @@ class _PostsState extends State<Posts> {
   _carregarItensDropdown() {
     // Categorias
     _listaItensDropBichinhos = Setup.getBichinhos();
-    _listaItensDropGenero = Setup.getGenero();
+    //_listaItensDropGenero = Setup.getGenero();
     _listaItensDropPorte = Setup.getPorte();
     _listaItensDropEstados = Setup.getEstados();
+  }
+
+  Future<Stream<QuerySnapshot>> _addListenerPosts() async {
+    FirebaseFirestore db =  FirebaseFirestore.instance;
+    Stream<QuerySnapshot> stream = db
+      .collection("posts")
+      .snapshots();
+
+      stream.listen((dados) {
+        _controller.add(dados);
+       });
   }
 
   @override
@@ -67,6 +85,7 @@ class _PostsState extends State<Posts> {
 
     _carregarItensDropdown();
     _verificarUsuarioLogado();
+    _addListenerPosts();
   }
 
   @override
@@ -157,8 +176,51 @@ class _PostsState extends State<Posts> {
                       },
                     ),
                   ),
-                )),
+                )
+              ),
           ],),
+          // Listagem de Posts
+          StreamBuilder(
+            stream: _controller.stream,
+            builder: (context, snapshot){
+              switch( snapshot.connectionState){
+                case ConnectionState.none:
+                case ConnectionState.waiting:
+                case ConnectionState.active:
+                case ConnectionState.done:
+                  QuerySnapshot querySnapshot = snapshot.data;
+
+                  if( querySnapshot.docs.length == 0){
+                    return Container(
+                      padding: EdgeInsets.all(25),
+                      child: Text("Nehum animalzinho! :( ",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold
+                      )),
+                    );
+                  }
+
+                  return Expanded(
+                    child: ListView.builder(
+                      itemCount: querySnapshot.docs.length,
+                      itemBuilder: (_, indice){
+                        List<DocumentSnapshot> posts = querySnapshot.docs.toList() ?? [];
+                        DocumentSnapshot documentSnapshot = posts[indice];
+                        Post post = Post.fromDocumentSnapshot(documentSnapshot);
+                        return ItemPost(
+                            post: post,
+                            onTapItem: (){
+
+                            },
+                          );
+                      }
+                    ),
+                  );
+                }
+              return Container();
+            },
+          )
         ],),
       ),
     );

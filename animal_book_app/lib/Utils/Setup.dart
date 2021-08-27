@@ -55,3 +55,11 @@ class Setup {
     return itensDropPorte;
   }
 }
+
+
+
+
+
+
+
+//############  Acertar categorias em NOAVA POSTAGEM ###############
