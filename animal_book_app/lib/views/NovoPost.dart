@@ -1,10 +1,10 @@
 import 'dart:io';
+import 'package:animal_book_app/Utils/Setup.dart';
 import 'package:animal_book_app/models/Post.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,7 @@ class _NovoPostState extends State<NovoPost> {
   List<File> _listaImagens = [];
   List<DropdownMenuItem<String>> _listaItensDropEstados = [];
   List<DropdownMenuItem<String>> _listaItensDropBichinhos = [];
-  List<DropdownMenuItem<String>> _listaItensDropSexo = [];
+  List<DropdownMenuItem<String>> _listaItensDropGenero = [];
   List<DropdownMenuItem<String>> _listaItensDropCastramento = [];
   List<DropdownMenuItem<String>> _listaItensDropPorte = [];
 
@@ -31,41 +31,43 @@ class _NovoPostState extends State<NovoPost> {
 
   String _itemSelecionadoEstado;
   String _itemSelecionadoBichinho;
-  String _itemSelecionadoSexo;
+  String _itemSelecionadoGenero;
   String _itemSelecionadoCastramento;
   String _itemSelecionadoPorte;
 
   _selecionarImagemGaleria() async {
-    File imagemSelecionada = await ImagePicker.pickImage(source: ImageSource.gallery);
-      if( imagemSelecionada != null){
-        setState((){
-          _listaImagens.add( imagemSelecionada );
-        });
-      }
+    File imagemSelecionada =
+        await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (imagemSelecionada != null) {
+      setState(() {
+        _listaImagens.add(imagemSelecionada);
+      });
+    }
   }
 
-  _openDialog(BuildContext context){
+  _openDialog(BuildContext context) {
     showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder:(BuildContext context){
-        return AlertDialog(
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-            CircularProgressIndicator(),
-            SizedBox(height: 20,),
-            Text("Salvando anúncio...")
-            ],
-          ),
-        );
-      }
-    );
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                CircularProgressIndicator(),
+                SizedBox(
+                  height: 20,
+                ),
+                Text("Salvando anúncio...")
+              ],
+            ),
+          );
+        });
   }
 
-    // Save Post
-  _savePost() async{
-    _openDialog( _dialogContext );
+  // Save Post
+  _savePost() async {
+    _openDialog(_dialogContext);
     // Upload Images in Storage
     await _uploadImages();
 
@@ -75,71 +77,59 @@ class _NovoPostState extends State<NovoPost> {
     String idUsuarioLogado = usuarioLogado.uid;
 
     FirebaseFirestore db = FirebaseFirestore.instance;
-    db.collection("my_posts")
-      .doc(idUsuarioLogado)
-      .collection("posts")
-      .doc( _post.id)
-      .set( _post.toMap()).then((_){
-        Navigator.pop(_dialogContext);
-        Navigator.pop(context);
-      });
+    db
+        .collection("my_posts")
+        .doc(idUsuarioLogado)
+        .collection("posts")
+        .doc(_post.id)
+        .set(_post.toMap())
+        .then((_) {
 
+        // Save Posts
+        db.collection("posts")
+          .doc( _post.id )
+          .set( _post.toMap()).then((_) {
+            Navigator.pop(_dialogContext);
+            Navigator.pop(context);
+          });
+      });
 
     // Upload Posts in Firestorage
   }
+
   Future _uploadImages() async {
     FirebaseStorage storage = FirebaseStorage.instance;
     Reference rootFolder = storage.ref();
 
-    for( var imagem in _listaImagens){
+    for (var imagem in _listaImagens) {
       String nameImage = DateTime.now().millisecondsSinceEpoch.toString();
-      Reference file = rootFolder
-        .child("my_posts")
-        .child( _post.id )
-        .child(nameImage);
+      Reference file =
+          rootFolder.child("my_posts").child(_post.id).child(nameImage);
 
-        //Upload Refactory
-        UploadTask task = file.putFile(imagem);
-        // StorageUploadTask uploadTask = file.putFile(imagem);
-        // StorageTaskSnapshot taskSnapshot = await UploadTask.onComplete;
-        String url = await (await task).ref.getDownloadURL();
-        _post.fotos.add(url);
+      //Upload Refactory
+      UploadTask task = file.putFile(imagem);
+      // StorageUploadTask uploadTask = file.putFile(imagem);
+      // StorageTaskSnapshot taskSnapshot = await UploadTask.onComplete;
+      String url = await (await task).ref.getDownloadURL();
+      _post.fotos.add(url);
     }
   }
 
   // Select Estados
   @override
-  void initState(){
+  void initState() {
     // TODO: implement initState
     super.initState();
     _carregarItensDropdown();
     _post = Post();
   }
 
-  _carregarItensDropdown(){
-    // Bichinhos
-    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Cão"), value: "cachorro",));
-    _listaItensDropBichinhos.add(DropdownMenuItem(child: Text("Gato"),value: "gato",));
-
-    // Sexo
-    _listaItensDropSexo.add(DropdownMenuItem(child: Text("Macho"),value: "macho",));
-    _listaItensDropSexo.add(DropdownMenuItem(child: Text("Fêmea"),value: "femea",));
-
-    // Castramento
-    _listaItensDropCastramento.add(DropdownMenuItem(child: Text("Sim"),value: "sim",));
-    _listaItensDropCastramento.add(DropdownMenuItem(child: Text("Não"),value: "nao",));
-
-    // Porte
-    _listaItensDropPorte.add(DropdownMenuItem(child: Text("Pequeno"),value: "pequeno",));
-    _listaItensDropPorte.add(DropdownMenuItem(child: Text("Médio"),value: "medio",));
-    _listaItensDropPorte.add(DropdownMenuItem(child: Text("Grande"),value: "grande",));
-
-    //Estados
-    for( var estado in Estados.listaEstadosSigla ){
-      _listaItensDropEstados.add(
-        DropdownMenuItem(child: Text(estado), value: estado,
-      ));
-    }
+  _carregarItensDropdown() {
+    // Categorias
+    _listaItensDropBichinhos = Setup.getBichinhos();
+    _listaItensDropGenero = Setup.getGenero();
+    _listaItensDropPorte = Setup.getPorte();
+    _listaItensDropEstados = Setup.getEstados();
   }
 
   @override
@@ -151,140 +141,156 @@ class _NovoPostState extends State<NovoPost> {
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(16),
-          child:Form(
+          child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-              //Área da imagens
-              FormField<List>(
-                initialValue: _listaImagens,
-                validator: ( imagens ){
-                  if( imagens.length == 0){
-                    return "Necessário selecionar uma imagem!";
-                  }
-                  return null;
-                },
-                builder: (state){
-                  return Column(children: <Widget>[
-                    Container(
-                      height: 100,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _listaImagens.length + 1,
-                          itemBuilder: (context, indice){
-                            if( indice == _listaImagens.length ){
-                              return Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8),
-                                  child: GestureDetector(
-                                    onTap: (){
-                                      _selecionarImagemGaleria();
-                                    },
-                                    child: CircleAvatar(
-                                      backgroundColor: Colors.grey[400],
-                                      radius: 50,
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: <Widget>[
-                                        Icon(
-                                          Icons.add_a_photo,
-                                          size: 40,
-                                          color: Colors.grey[100],
+                //Área da imagens
+                FormField<List>(
+                  initialValue: _listaImagens,
+                  validator: (imagens) {
+                    if (imagens.length == 0) {
+                      return "Necessário selecionar uma imagem!";
+                    }
+                    return null;
+                  },
+                  builder: (state) {
+                    return Column(
+                      children: <Widget>[
+                        Container(
+                          height: 100,
+                          child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _listaImagens.length + 1,
+                              itemBuilder: (context, indice) {
+                                if (indice == _listaImagens.length) {
+                                  return Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        _selecionarImagemGaleria();
+                                      },
+                                      child: CircleAvatar(
+                                        backgroundColor: Colors.grey[400],
+                                        radius: 50,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.add_a_photo,
+                                              size: 40,
+                                              color: Colors.grey[100],
+                                            ),
+                                            Text(
+                                              "Adicionar",
+                                              style: TextStyle(
+                                                  color: Colors.grey[100]),
+                                            )
+                                          ],
                                         ),
-                                        Text(
-                                          "Adicionar",
-                                          style: TextStyle(
-                                            color: Colors.grey[100]
-                                             ),
-                                        )
-                                      ],),
-                                    ),
-                                  ),
-                                );
-                            }
-                            if( _listaImagens.length > 0){
-                            return Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 8),
-                              child: GestureDetector(
-                                onTap: (){
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) => Dialog(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: <Widget>[
-                                        Image.file( _listaImagens[indice]),
-                                        FlatButton(
-                                          child: Text("Excluir"),
-                                           textColor: Colors.red,
-                                           onPressed: (){
-                                             setState(() {
-                                             _listaImagens.removeAt(indice);
-                                             Navigator.of(context).pop();
-                                             });
-                                           },),
-                                        ],
                                       ),
-                                    )
+                                    ),
                                   );
-                                },
-                                child: CircleAvatar(
-                                  radius: 50,
-                                  backgroundImage: FileImage( _listaImagens[indice]),
-                                  child: Container(
-                                    color: Color.fromRGBO(255, 255, 255, 0.4),
-                                    alignment: Alignment.center,
-                                    child: Icon(Icons.delete, color: Colors.red,)                                ),
-                              ),
+                                }
+                                if (_listaImagens.length > 0) {
+                                  return Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 8),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => Dialog(
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: <Widget>[
+                                                      Image.file(_listaImagens[
+                                                          indice]),
+                                                      FlatButton(
+                                                        child: Text("Excluir"),
+                                                        textColor: Colors.red,
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            _listaImagens
+                                                                .removeAt(
+                                                                    indice);
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          });
+                                                        },
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ));
+                                      },
+                                      child: CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage:
+                                            FileImage(_listaImagens[indice]),
+                                        child: Container(
+                                            color: Color.fromRGBO(
+                                                255, 255, 255, 0.4),
+                                            alignment: Alignment.center,
+                                            child: Icon(
+                                              Icons.delete,
+                                              color: Colors.red,
+                                            )),
+                                      ),
+                                    ),
+                                  );
+                                }
+                                return Container();
+                              }),
+                        ),
+                        if (state.hasError)
+                          Container(
+                            child: Text(
+                              "[${state.errorText}]",
+                              style: TextStyle(color: Colors.red, fontSize: 14),
                             ),
-                          );
-                        }
-                          return Container();
-                        }
-                      ),
-                    ),
-                    if( state.hasError )
-                    Container(
-                      child: Text(
-                        "[${state.errorText}]",
-                        style: TextStyle(
-                          color: Colors.red, fontSize: 14
+                          )
+                      ],
+                    );
+                  },
+                ),
+                //Menus Dropdown 01
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: DropdownButtonFormField(
+                          value: _itemSelecionadoEstado,
+                          hint: Text("Estado"),
+                          onSaved: (estado) {
+                            _post.estado = estado;
+                          },
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                          items: _listaItensDropEstados,
+                          validator: (value) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo Obrigatório!")
+                                .valido(value);
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _itemSelecionadoEstado = value;
+                            });
+                          },
                         ),
                       ),
-                    )
-                  ],);
-                },
-              ),
-              //Menus Dropdown 01
-              Row(children: <Widget>[
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: DropdownButtonFormField(
-                      value: _itemSelecionadoEstado,
-                      hint: Text("Estado"),
-                      onSaved: (estado){
-                        _post.estado = estado;
-                      },
-                      style: TextStyle(
-                        color:  Colors.black,
-                        fontSize: 16,
-                        ),
-                      items: _listaItensDropEstados,
-                      validator: (value){
-                        return Validador()
-                        .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
-                        .valido(value);
-                      },
-                      onChanged: (value){
-                        setState(() {
-                          _itemSelecionadoEstado = value;
-                        });
-                      },
                     ),
-                    ),
-                  ),
-                Expanded( // Item selecionado Bichinho
+                    Expanded(
+                      // Item selecionado Bichinho
                       child: Padding(
                         padding: EdgeInsets.all(8),
                         child: DropdownButtonFormField(
@@ -312,13 +318,12 @@ class _NovoPostState extends State<NovoPost> {
                         ),
                       ),
                     ),
-
                     Expanded(
-                      // Item selecionado Sexo
+                      // Item selecionado Genero
                       child: Padding(
                         padding: EdgeInsets.all(8),
                         child: DropdownButtonFormField(
-                          value: _itemSelecionadoSexo,
+                          value: _itemSelecionadoGenero,
                           hint: Text("Genero"),
                           onSaved: (genero) {
                             _post.genero = genero;
@@ -327,7 +332,7 @@ class _NovoPostState extends State<NovoPost> {
                             color: Colors.black,
                             fontSize: 16,
                           ),
-                          items: _listaItensDropSexo,
+                          items: _listaItensDropGenero,
                           validator: (value) {
                             return Validador()
                                 .add(Validar.OBRIGATORIO,
@@ -336,134 +341,110 @@ class _NovoPostState extends State<NovoPost> {
                           },
                           onChanged: (value) {
                             setState(() {
-                              _itemSelecionadoSexo = value;
+                              _itemSelecionadoGenero = value;
                             });
                           },
                         ),
                       ),
                     ),
-                ],
-              ),
-              //Menus Dropdown 02
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: DropdownButtonFormField(
-                        value: _itemSelecionadoCastramento,
-                        hint: Text("Castramento"),
+                  ],
+                ),
+                //Menus Dropdown 02
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: DropdownButtonFormField(
+                          value: _itemSelecionadoCastramento,
+                          hint: Text("Castramento"),
                           onSaved: (castrado) {
                             _post.castrado = castrado;
                           },
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                          items: _listaItensDropCastramento,
+                          validator: (value) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo Obrigatório!")
+                                .valido(value);
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _itemSelecionadoCastramento = value;
+                            });
+                          },
                         ),
-                        items: _listaItensDropCastramento,
-                        validator: (value) {
-                          return Validador()
-                              .add(Validar.OBRIGATORIO,
-                                  msg: "Campo Obrigatório!")
-                              .valido(value);
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            _itemSelecionadoCastramento = value;
-                          });
-                        },
                       ),
                     ),
-                  ),
-                  Expanded(
-                    // Item selecionado Porte
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: DropdownButtonFormField(
-                        value: _itemSelecionadoPorte,
-                        hint: Text("Porte"),
-                         onSaved: (porte) {
+                    Expanded(
+                      // Item selecionado Porte
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: DropdownButtonFormField(
+                          value: _itemSelecionadoPorte,
+                          hint: Text("Porte"),
+                          onSaved: (porte) {
                             _post.porte = porte;
                           },
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                          items: _listaItensDropPorte,
+                          validator: (value) {
+                            return Validador()
+                                .add(Validar.OBRIGATORIO,
+                                    msg: "Campo Obrigatório!")
+                                .valido(value);
+                          },
+                          onChanged: (value) {
+                            setState(() {
+                              _itemSelecionadoPorte = value;
+                            });
+                          },
                         ),
-                        items: _listaItensDropPorte,
-                        validator: (value) {
-                          return Validador()
-                              .add(Validar.OBRIGATORIO,
-                                  msg: "Campo Obrigatório!")
-                              .valido(value);
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            _itemSelecionadoPorte = value;
-                          });
-                        },
                       ),
                     ),
-                  ),
-                  // Expanded(
-                  //   // Item selecionado Sexo
-                  //   child: Padding(
-                  //     padding: EdgeInsets.all(8),
-                  //     child: DropdownButtonFormField(
-                  //       value: _itemSelecionadoSexo,
-                  //       hint: Text("Cidade"),
-                  //       style: TextStyle(
-                  //         color: Colors.black,
-                  //         fontSize: 16,
-                  //       ),
-                  //       items: _listaItensDropSexo,
-                  //       validator: (value) {
-                  //         return Validador()
-                  //             .add(Validar.OBRIGATORIO,
-                  //                 msg: "Campo Obrigatório!")
-                  //             .valido(value);
-                  //       },
-                  //       onChanged: (value) {
-                  //         setState(() {
-                  //           _itemSelecionadoSexo = value;
-                  //         });
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
-                ],
-              ),
-            //Caixas de texto Cidade
-              Padding(
-                padding: EdgeInsets.only(bottom: 15, top: 15),
+                  ],
+                ),
+                //Caixas de texto Cidade
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15, top: 15),
                   child: CustomInput(
-                  hint: "Cidade",
-                  onSaved: (cidade) {
+                    hint: "Cidade",
+                    onSaved: (cidade) {
                       _post.cidade = cidade;
                     },
-                  validator: (value){
-                    return Validador()
-                      .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
-                      .valido(value);
-                  }, controller: null,
+                    validator: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
+                          .valido(value);
+                    },
+                    controller: null,
+                  ),
                 ),
-              ),
-              //Caixas de texto Nome
-              Padding(
-                padding: EdgeInsets.only(bottom: 15),
-                child: CustomInput(
-                  hint: "Nome do Pet",
-                  onSaved: (nomePet) {
+                //Caixas de texto Nome
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15),
+                  child: CustomInput(
+                    hint: "Nome do Pet",
+                    onSaved: (nomePet) {
                       _post.nomePet = nomePet;
                     },
-                  validator: (value) {
-                    return Validador()
-                        .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
-                        .valido(value);
-                  }, controller: null,
+                    validator: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
+                          .valido(value);
+                    },
+                    controller: null,
+                  ),
                 ),
-              ),
-              //Caixas de texto Nome
-              Padding(
+                //Caixas de texto Nome
+                Padding(
                   padding: EdgeInsets.only(bottom: 15),
                   child: CustomInput(
                     hint: "Nome do Abrigo",
@@ -474,29 +455,31 @@ class _NovoPostState extends State<NovoPost> {
                       return Validador()
                           .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
                           .valido(value);
-                    }, controller: null,
+                    },
+                    controller: null,
                   ),
                 ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 15),
-                child: CustomInput(
-                  hint: "Contato",
-                  onSaved: (contato) {
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15),
+                  child: CustomInput(
+                    hint: "Contato",
+                    onSaved: (contato) {
                       _post.contato = contato;
                     },
-                  type: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    TelefoneInputFormatter()
-                  ],
-                  validator: (value) {
-                    return Validador()
-                        .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
-                        .valido(value);
-                  }, controller: null,
+                    type: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      TelefoneInputFormatter()
+                    ],
+                    validator: (value) {
+                      return Validador()
+                          .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
+                          .valido(value);
+                    },
+                    controller: null,
+                  ),
                 ),
-              ),
-              //Caixas de texto Descrição
+                //Caixas de texto Descrição
                 Padding(
                   padding: EdgeInsets.only(bottom: 15),
                   child: CustomInput(
@@ -507,16 +490,17 @@ class _NovoPostState extends State<NovoPost> {
                     maxLines: 1,
                     validator: (value) {
                       return Validador()
-                        .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
-                        .maxLength(200, msg:"Máximo de 200 caractéres")
-                        .valido(value);
-                    }, controller: null,
+                          .add(Validar.OBRIGATORIO, msg: "Campo Obrigatório!")
+                          .maxLength(200, msg: "Máximo de 200 caractéres")
+                          .valido(value);
+                    },
+                    controller: null,
                   ),
                 ),
-              CustomButton(
+                CustomButton(
                   texto: "Cadastrar novo animalzinho",
                   onPressed: () {
-                    if( _formKey.currentState.validate()){
+                    if (_formKey.currentState.validate()) {
                       // Save Fields
                       _formKey.currentState.save();
 

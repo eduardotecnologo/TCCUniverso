@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post {
@@ -15,8 +14,25 @@ class Post {
   String _descricao;
   List<String> _fotos;
 
-  // Construtor
-  Post(){
+  Post();
+
+  Post.fromDocumentSnapshot(DocumentSnapshot documentSnapshot){
+    this.id = documentSnapshot.id;
+    this.estado = documentSnapshot["estado"];
+    this.pet = documentSnapshot["pet"];
+    this.genero = documentSnapshot["genero"];
+    this.castrado = documentSnapshot["castrado"];
+    this.porte = documentSnapshot["porte"];
+    this.cidade = documentSnapshot["cidade"];
+    this.nomePet = documentSnapshot["nomePet"];
+    this.nomeAbrigo = documentSnapshot["nomeAbrigo"];
+    this.contato = documentSnapshot["contato"];
+    this.descricao = documentSnapshot["descricao"];
+    this.fotos = List<String>.from(documentSnapshot["fotos"]) ;
+  }
+
+  // Construtor nomeado
+  Post.generateId(){
     FirebaseFirestore db = FirebaseFirestore.instance;
     CollectionReference posts = db.collection("my_posts");
     this.id = posts.doc().id;

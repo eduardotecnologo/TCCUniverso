@@ -1,3 +1,4 @@
+import 'package:animal_book_app/Utils/Setup.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -7,6 +8,15 @@ class Posts extends StatefulWidget {
 }
 class _PostsState extends State<Posts> {
   List<String> itensMenu = [];
+  List<DropdownMenuItem<String>> _listaItensDropBichinhos;
+  List<DropdownMenuItem<String>> _listaItensDropGenero;
+  List<DropdownMenuItem<String>> _listaItensDropPorte;
+  List<DropdownMenuItem<String>> _listaItensDropEstados;
+
+  String _itemSelecionadoEstado;
+  String _itemSelecionadoBichinho;
+  String _itemSelecionadoPorte;
+
   _escolhaMenuItem(String itemEscolhido){
     switch( itemEscolhido ){
       case "Meus Posts" :
@@ -42,10 +52,20 @@ class _PostsState extends State<Posts> {
           ];
       }
   }
+
+  _carregarItensDropdown() {
+    // Categorias
+    _listaItensDropBichinhos = Setup.getBichinhos();
+    _listaItensDropGenero = Setup.getGenero();
+    _listaItensDropPorte = Setup.getPorte();
+    _listaItensDropEstados = Setup.getEstados();
+  }
+
   @override
   void initState(){
     super.initState();
 
+    _carregarItensDropdown();
     _verificarUsuarioLogado();
   }
 
@@ -70,7 +90,76 @@ class _PostsState extends State<Posts> {
         ],
       ),
       body: Container(
-        child: Text("Tela de posts"),
+        child: Column(children: <Widget>[
+          Row(children: <Widget>[
+            // _itemSelecionadoEstado
+            Expanded(
+              child: DropdownButtonHideUnderline(
+                child: Center(
+                  child: DropdownButton(
+                    iconEnabledColor: Color(0xffff56e4c),
+                    value: _itemSelecionadoEstado,
+                    items: _listaItensDropEstados,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: Colors.black
+                    ),
+                    onChanged: (estado){
+                      setState(() {
+                      _itemSelecionadoEstado = estado;
+                      });
+                    },
+                  ),
+                ),
+              )
+            ),
+            Container(
+                  color: Colors.grey[200],
+                  width: 2,
+                  height: 60,
+                ),
+            // _itemSelecionadoBichinho
+            Expanded(
+                    child: DropdownButtonHideUnderline(
+                  child: Center(
+                    child: DropdownButton(
+                      iconEnabledColor: Color(0xffff56e4c),
+                      value: _itemSelecionadoBichinho,
+                      items: _listaItensDropBichinhos,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                      onChanged: (bichinho) {
+                        setState(() {
+                          _itemSelecionadoBichinho = bichinho;
+                        });
+                      },
+                    ),
+                  ),
+                )
+              ),
+              Container(
+                color: Colors.grey[200],
+                width: 2,
+                height: 60,
+              ),
+              // _itemSelecionadoPorte
+                Expanded(
+                    child: DropdownButtonHideUnderline(
+                  child: Center(
+                    child: DropdownButton(
+                      iconEnabledColor: Color(0xffff56e4c),
+                      value: _itemSelecionadoPorte,
+                      items: _listaItensDropPorte,
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                      onChanged: (porte) {
+                        setState(() {
+                          _itemSelecionadoPorte = porte;
+                        });
+                      },
+                    ),
+                  ),
+                )),
+          ],),
+        ],),
       ),
     );
   }
