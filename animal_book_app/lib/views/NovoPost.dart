@@ -18,19 +18,19 @@ class NovoPost extends StatefulWidget {
 }
 
 class _NovoPostState extends State<NovoPost> {
-  List<File> _listaImagens = List();
-  List<DropdownMenuItem<String>> _listaItensDropEstados = List();
-  List<DropdownMenuItem<String>> _listaItensDropBichinhos = List();
-  List<DropdownMenuItem<String>> _listaItensDropGenero = List();
-  List<DropdownMenuItem<String>> _listaItensDropCastramento = List();
-  List<DropdownMenuItem<String>> _listaItensDropPorte = List();
+  List<File> _listaImagens = [];
+  List<DropdownMenuItem<String>> _listaItensDropEstados = [];
+  List<DropdownMenuItem<String>> _listaItensDropBichinhos = [];
+  List<DropdownMenuItem<String>> _listaItensDropGenero = [];
+  List<DropdownMenuItem<String>> _listaItensDropCastramento = [];
+  List<DropdownMenuItem<String>> _listaItensDropPorte = [];
 
   final _formKey = GlobalKey<FormState>();
   Post _post;
   BuildContext _dialogContext;
 
   String _itemSelecionadoEstado;
-  String _itemSelecionadoBichinho;
+  String _itemSelecionadoBichinhos;
   String _itemSelecionadoGenero;
   String _itemSelecionadoCastramento;
   String _itemSelecionadoPorte;
@@ -282,7 +282,7 @@ class _NovoPostState extends State<NovoPost> {
                       child: Padding(
                         padding: EdgeInsets.all(8),
                         child: DropdownButtonFormField(
-                          value: _itemSelecionadoBichinho,
+                          value: _itemSelecionadoBichinhos,
                           hint: Text("Pet"),
                           onSaved: (pet) {
                             _post.pet = pet;
@@ -300,7 +300,7 @@ class _NovoPostState extends State<NovoPost> {
                           },
                           onChanged: (value) {
                             setState(() {
-                              _itemSelecionadoBichinho = value;
+                              _itemSelecionadoBichinhos = value;
                             });
                           },
                         ),

@@ -23,7 +23,7 @@ class _PostsState extends State<Posts> {
   final _controller = StreamController<QuerySnapshot>.broadcast();
 
   String _itemSelecionadoEstado;
-  String _itemSelecionadoBichinho;
+  String _itemSelecionadoBichinhos;
   String _itemSelecionadoPorte;
   String _itensDropGenero;
 
@@ -50,6 +50,7 @@ class _PostsState extends State<Posts> {
 
   Future _verificarUsuarioLogado() async {
     FirebaseAuth auth = FirebaseAuth.instance;
+    // ignore: await_only_futures
     User usuarioLogado = await auth.currentUser;
 
       if( usuarioLogado == null){
@@ -71,6 +72,7 @@ class _PostsState extends State<Posts> {
     _listaItensDropEstados = Setup.getEstados();
   }
 
+  // ignore: missing_return
   Future<Stream<QuerySnapshot>>_addListenerPosts() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     Stream<QuerySnapshot> stream = db
@@ -82,17 +84,22 @@ class _PostsState extends State<Posts> {
     });
   }
 
+   // ignore: missing_return
    Future<Stream<QuerySnapshot>> _filterPosts() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
     Query query = db.collection("posts");
+
     if(_itemSelecionadoEstado != null){
       query = query.where("estado", isEqualTo: _itemSelecionadoEstado);
+      print(_itemSelecionadoEstado);
+
     }
-    if(_itemSelecionadoBichinho != null){
-      query = query.where("estado", isEqualTo: _itemSelecionadoBichinho);
+     if(_itemSelecionadoBichinhos != null){
+      query = query.where("pet", isEqualTo: _itemSelecionadoBichinhos);
+      print(_itemSelecionadoBichinhos);
     }
     if(_itemSelecionadoPorte != null){
-      query = query.where("estado", isEqualTo: _itemSelecionadoBichinho);
+      query = query.where("porte", isEqualTo: _itemSelecionadoPorte);
     }
 
     Stream<QuerySnapshot> stream = query.snapshots();
@@ -155,7 +162,7 @@ class _PostsState extends State<Posts> {
                       fontSize: 18,
                       color: Colors.black
                     ),
-                    onChanged: (estado){
+                    onChanged: (estado) {
                       setState(() {
                       _itemSelecionadoEstado = estado;
                       _filterPosts();
@@ -175,13 +182,16 @@ class _PostsState extends State<Posts> {
                     child: DropdownButtonHideUnderline(
                   child: Center(
                     child: DropdownButton(
-                      iconEnabledColor: Color(0xffff56e4c),
-                      value: _itemSelecionadoBichinho,
+                      iconEnabledColor: temaPadrao.primaryColor,
+                      value: _itemSelecionadoBichinhos,
                       items: _listaItensDropBichinhos,
-                      style: TextStyle(fontSize: 18, color: Colors.black),
-                      onChanged: (bichinho) {
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.black
+                        ),
+                      onChanged: (pet) {
                         setState(() {
-                          _itemSelecionadoBichinho = bichinho;
+                          _itemSelecionadoBichinhos = pet;
                           _filterPosts();
                         });
                       },

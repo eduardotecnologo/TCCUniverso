@@ -132,6 +132,12 @@ class _LoginState extends State<Login> {
                   _validarCampos();
                 },
               ),
+              FlatButton(
+                child: Text("Encontre um amiguinho"),
+                onPressed: (){
+                  Navigator.pushReplacementNamed(context, "/");
+                  },
+                ),
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: Text(

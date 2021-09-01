@@ -149,7 +149,7 @@ class _DetailsPost extends State<DetailsPost> {
                  alignment: Alignment.center,
                  decoration: BoxDecoration(
                    color: temaPadrao.primaryColor,
-                   borderRadius: BorderRadius.circular(30)
+                   borderRadius: BorderRadius.circular(5)
                  ),
                 ),
                onTap: (){
