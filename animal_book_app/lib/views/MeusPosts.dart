@@ -74,9 +74,11 @@ class _MeusPostsState extends State<MeusPosts> {
       appBar: AppBar(
         title: Text("Meus Posts"),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(Icons.add),
+        label: Text("Adicionar"),
         foregroundColor:Colors.white,
-        child: Icon(Icons.add),
         onPressed: (){
           Navigator.pushNamed(context, "/novo-post");
         },

@@ -17,18 +17,18 @@ class Setup {
     }
     return listaItensDropEstados;
   }
+
   static List<DropdownMenuItem<String>> getBichinhos() {
     List<DropdownMenuItem<String>> itensDropBichinhos = [];
-    // Mostrar nas categorias
-    itensDropBichinhos.add(DropdownMenuItem(child: Text(
-        "Amiguinho",
+    itensDropBichinhos.add(DropdownMenuItem(
+      child: Text(
+        "Pet",
         style: TextStyle(color: Color(0xffff56e4c)),
       ),
       value: null,
     ));
 
-    itensDropBichinhos.add(DropdownMenuItem(
-      child: Text("Cão"),value: "cachorro",));
+    itensDropBichinhos.add(DropdownMenuItem(child: Text("Cão"),value: "cao",));
     itensDropBichinhos.add(DropdownMenuItem(child: Text("Gato"),value: "gato",));
     return itensDropBichinhos;
   }
@@ -77,11 +77,3 @@ class Setup {
     return itensDropCastramento;
   }
 }
-
-
-
-
-
-
-
-//############  Acertar categorias em NOAVA POSTAGEM ###############
