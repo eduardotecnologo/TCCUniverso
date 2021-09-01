@@ -1,3 +1,4 @@
+import 'package:animal_book_app/views/DetailsPost.dart';
 import 'package:animal_book_app/views/MeusPosts.dart';
 import 'package:animal_book_app/views/NovoPost.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,6 +25,9 @@ class RouteGenerator{
        case "/novo-post":
         return MaterialPageRoute(
           builder: (_) => NovoPost());
+       case "/datails-post":
+        return MaterialPageRoute(
+          builder: (_) => DetailsPost(args));
        default:
        _erroRota();
     }

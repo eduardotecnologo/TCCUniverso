@@ -10,6 +10,7 @@
 .svn/
 
 google-services.json
+Oldgoogle-services.json
 # IntelliJ related
 *.iml
 *.ipr

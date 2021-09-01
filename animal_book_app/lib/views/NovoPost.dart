@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:animal_book_app/Utils/Setup.dart';
 import 'package:animal_book_app/models/Post.dart';
 import 'package:brasil_fields/brasil_fields.dart';
@@ -7,7 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:animal_book_app/views/widgets/CustomButtom.dart';
 import 'package:animal_book_app/views/widgets/CustomInput.dart';
 import 'package:validadores/Validador.dart';
@@ -18,12 +18,12 @@ class NovoPost extends StatefulWidget {
 }
 
 class _NovoPostState extends State<NovoPost> {
-  List<File> _listaImagens = [];
-  List<DropdownMenuItem<String>> _listaItensDropEstados = [];
-  List<DropdownMenuItem<String>> _listaItensDropBichinhos = [];
-  List<DropdownMenuItem<String>> _listaItensDropGenero = [];
-  List<DropdownMenuItem<String>> _listaItensDropCastramento = [];
-  List<DropdownMenuItem<String>> _listaItensDropPorte = [];
+  List<File> _listaImagens = List();
+  List<DropdownMenuItem<String>> _listaItensDropEstados = List();
+  List<DropdownMenuItem<String>> _listaItensDropBichinhos = List();
+  List<DropdownMenuItem<String>> _listaItensDropGenero = List();
+  List<DropdownMenuItem<String>> _listaItensDropCastramento = List();
+  List<DropdownMenuItem<String>> _listaItensDropPorte = List();
 
   final _formKey = GlobalKey<FormState>();
   Post _post;
@@ -36,8 +36,7 @@ class _NovoPostState extends State<NovoPost> {
   String _itemSelecionadoPorte;
 
   _selecionarImagemGaleria() async {
-    File imagemSelecionada =
-        await ImagePicker.pickImage(source: ImageSource.gallery);
+    File imagemSelecionada = await ImagePicker.pickImage(source: ImageSource.gallery);
     if (imagemSelecionada != null) {
       setState(() {
         _listaImagens.add(imagemSelecionada);
@@ -56,11 +55,9 @@ class _NovoPostState extends State<NovoPost> {
               children: <Widget>[
                 CircularProgressIndicator(),
                 SizedBox(
-                  height: 20,
-                ),
-                Text("Salvando anúncio...")
-              ],
-            ),
+                  height: 20,),
+                Text("Salvando Posts...")
+              ],),
           );
         });
   }
@@ -82,11 +79,11 @@ class _NovoPostState extends State<NovoPost> {
         .doc(idUsuarioLogado)
         .collection("posts")
         .doc(_post.id)
-        .set(_post.toMap())
-        .then((_) {
+        .set(_post.toMap()).then((_) {
 
         // Save Posts
-        db.collection("posts")
+        db
+          .collection("posts")
           .doc( _post.id )
           .set( _post.toMap()).then((_) {
             Navigator.pop(_dialogContext);
@@ -103,14 +100,16 @@ class _NovoPostState extends State<NovoPost> {
 
     for (var imagem in _listaImagens) {
       String nameImage = DateTime.now().millisecondsSinceEpoch.toString();
-      Reference file =
-          rootFolder.child("my_posts").child(_post.id).child(nameImage);
+      Reference file = rootFolder
+        .child("my_posts")
+        .child( _post.id )
+        .child( nameImage );
 
       //Upload Refactory
-      UploadTask task = file.putFile(imagem);
+      UploadTask uploadTask = file.putFile(imagem);
       // StorageUploadTask uploadTask = file.putFile(imagem);
       // StorageTaskSnapshot taskSnapshot = await UploadTask.onComplete;
-      String url = await (await task).ref.getDownloadURL();
+      String url = await (await uploadTask).ref.getDownloadURL();
       _post.fotos.add(url);
     }
   }
@@ -118,10 +117,9 @@ class _NovoPostState extends State<NovoPost> {
   // Select Estados
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _carregarItensDropdown();
-    _post = Post();
+    _post = Post.generateId();
   }
 
   _carregarItensDropdown() {
@@ -130,6 +128,7 @@ class _NovoPostState extends State<NovoPost> {
     _listaItensDropGenero = Setup.getGenero();
     _listaItensDropPorte = Setup.getPorte();
     _listaItensDropEstados = Setup.getEstados();
+    _listaItensDropCastramento = Setup.getCastracao();
   }
 
   @override
@@ -166,8 +165,7 @@ class _NovoPostState extends State<NovoPost> {
                               itemBuilder: (context, indice) {
                                 if (indice == _listaImagens.length) {
                                   return Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
+                                    padding:EdgeInsets.symmetric(horizontal: 8),
                                     child: GestureDetector(
                                       onTap: () {
                                         _selecionarImagemGaleria();
@@ -176,8 +174,7 @@ class _NovoPostState extends State<NovoPost> {
                                         backgroundColor: Colors.grey[400],
                                         radius: 50,
                                         child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          mainAxisAlignment: MainAxisAlignment.center,
                                           children: <Widget>[
                                             Icon(
                                               Icons.add_a_photo,
@@ -197,30 +194,23 @@ class _NovoPostState extends State<NovoPost> {
                                 }
                                 if (_listaImagens.length > 0) {
                                   return Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 8),
+                                    padding: EdgeInsets.symmetric(horizontal: 8),
                                     child: GestureDetector(
                                       onTap: () {
                                         showDialog(
                                             context: context,
                                             builder: (context) => Dialog(
                                                   child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
+                                                    mainAxisSize:MainAxisSize.min,
                                                     children: <Widget>[
-                                                      Image.file(_listaImagens[
-                                                          indice]),
+                                                      Image.file(_listaImagens[indice]),
                                                       FlatButton(
                                                         child: Text("Excluir"),
                                                         textColor: Colors.red,
                                                         onPressed: () {
                                                           setState(() {
-                                                            _listaImagens
-                                                                .removeAt(
-                                                                    indice);
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
+                                                            _listaImagens.removeAt(indice);
+                                                            Navigator.of(context).pop();
                                                           });
                                                         },
                                                       ),
@@ -230,11 +220,9 @@ class _NovoPostState extends State<NovoPost> {
                                       },
                                       child: CircleAvatar(
                                         radius: 50,
-                                        backgroundImage:
-                                            FileImage(_listaImagens[indice]),
+                                        backgroundImage:FileImage(_listaImagens[indice]),
                                         child: Container(
-                                            color: Color.fromRGBO(
-                                                255, 255, 255, 0.4),
+                                            color: Color.fromRGBO(255, 255, 255, 0.4),
                                             alignment: Alignment.center,
                                             child: Icon(
                                               Icons.delete,

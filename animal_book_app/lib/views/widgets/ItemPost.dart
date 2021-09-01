@@ -25,8 +25,8 @@ class ItemPost extends StatelessWidget {
           child: Row(children: <Widget>[
             //Image
             SizedBox(
-              width: 120,
-              height: 120,
+              width: 100,
+              height: 100,
               child: Image.network(
                 post.fotos[0],
                 fit: BoxFit.cover,
@@ -36,7 +36,7 @@ class ItemPost extends StatelessWidget {
             Expanded(
               flex: 3,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -46,6 +46,14 @@ class ItemPost extends StatelessWidget {
                         fontSize: 18,
                         fontWeight: FontWeight.bold),
                       ),
+                      Text(
+                      post.nomePet,
+                      style:
+                          TextStyle(
+                            fontSize: 18,
+                            fontWeight:
+                            FontWeight.bold),
+                    ),
                     Text(post.estado),
                   ],
                   ),
