@@ -35,6 +35,13 @@ class Setup {
 
   static List<DropdownMenuItem<String>> getGenero() {
     List<DropdownMenuItem<String>> itensDropGenero = [];
+    itensDropGenero.add(DropdownMenuItem(
+      child: Text(
+        "Genero",
+        style: TextStyle(color: Color(0xffff56e4c)),
+      ),
+      value: null,
+    ));
     itensDropGenero.add(DropdownMenuItem(child: Text("Macho"),value: "macho",));
     itensDropGenero.add(DropdownMenuItem(child: Text("Fêmea"),value: "femea",));
     return itensDropGenero;
@@ -54,4 +61,27 @@ class Setup {
     itensDropPorte.add(DropdownMenuItem(child: Text("Grande"),value: "grande",));
     return itensDropPorte;
   }
+
+  static List<DropdownMenuItem<String>> getCastracao() {
+      List<DropdownMenuItem<String>> itensDropCastramento = [];
+
+    itensDropCastramento.add(DropdownMenuItem(
+      child: Text(
+        "Castração",
+        style: TextStyle(color: Color(0xffff56e4c)),
+      ),
+      value: null,
+    ));
+    itensDropCastramento.add(DropdownMenuItem(child: Text("Sim"),value: "sim",));
+    itensDropCastramento.add(DropdownMenuItem(child: Text("Não"),value: "nao",));
+    return itensDropCastramento;
+  }
 }
+
+
+
+
+
+
+
+//############  Acertar categorias em NOAVA POSTAGEM ###############
