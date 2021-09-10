@@ -37,6 +37,7 @@ dependencies:
   validadores: ^1.0.5
   carousel_pro: ^1.0.0
   url_launcher: ^6.0.9
+  flutter_launcher_icons: ^0.7.4
   intl: ^0.17.0
 
 
@@ -44,6 +45,10 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+flutter_icons:
+  image_path: "img/icon.png"
+  android: true
+  ios: true
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -59,6 +64,8 @@ flutter:
   assets:
      - img/logo.png
   #   - images/a_dot_ham.jpeg
+
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
