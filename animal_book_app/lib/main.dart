@@ -6,7 +6,7 @@ import 'RouteGenerator.dart';
 
 final ThemeData temaPadrao = ThemeData(
   primaryColor: Color(0xffff56e4c),
-  accentColor: Color(0xffff56e4c)
+  colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Color(0xffff56e4c))
 );
 
 void main() async{
