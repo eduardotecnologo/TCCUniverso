@@ -5,14 +5,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'RouteGenerator.dart';
 
 final ThemeData temaPadrao = ThemeData(
-  primaryColor: Color(0xffff56e4c),
-  colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Color(0xffff56e4c))
+  primaryColor: Color(0xfff56e4c),
+  colorScheme: ColorScheme.fromSwatch().copyWith(secondary: Color(0xfff56e4c))
 );
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
   runApp(MaterialApp(
     title: "Animal Book",
     home: Posts(),

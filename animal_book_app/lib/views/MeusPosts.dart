@@ -72,6 +72,7 @@ class _MeusPostsState extends State<MeusPosts> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xfff56e4c),
         title: Text("Meus Posts"),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

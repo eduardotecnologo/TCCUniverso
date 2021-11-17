@@ -2,6 +2,7 @@ import 'package:animal_book_app/views/widgets/CustomButtom.dart';
 import 'package:flutter/material.dart';
 import 'package:animal_book_app/models/Usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'widgets/CustomInput.dart';
 
 class Login extends StatefulWidget {
@@ -10,6 +11,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
   TextEditingController _controllerEmail = new TextEditingController();
   TextEditingController _controllerSenha = new TextEditingController();
 
@@ -74,6 +76,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xfff56e4c),
         title: Text(""),
       ),
       body: Container(
@@ -130,7 +133,6 @@ class _LoginState extends State<Login> {
                 texto: _textBotao,
                 onPressed: (){
                   _validarCampos();
-
                 },
               ),
               FlatButton(

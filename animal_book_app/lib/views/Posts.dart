@@ -132,6 +132,7 @@ class _PostsState extends State<Posts> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Animal Book"),
+        backgroundColor: Color(0xfff56e4c),
         elevation: 0,
         actions: <Widget>[
           PopupMenuButton<String>(
@@ -209,7 +210,7 @@ class _PostsState extends State<Posts> {
                     child: DropdownButtonHideUnderline(
                   child: Center(
                     child: DropdownButton(
-                      iconEnabledColor: Color(0xffff56e4c),
+                      iconEnabledColor: Color(0xfff56e4c),
                       value: _itemSelecionadoPorte,
                       items: _listaItensDropPorte,
                       style: TextStyle(fontSize: 18, color: Colors.black),
