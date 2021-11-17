@@ -90,7 +90,6 @@ class _NovoPostState extends State<NovoPost> {
             Navigator.pop(context);
           });
       });
-
     // Upload Posts in Firestorage
   }
 
@@ -135,6 +134,7 @@ class _NovoPostState extends State<NovoPost> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xfff56e4c),
         title: Text("Nova Postagem"),
       ),
       body: SingleChildScrollView(

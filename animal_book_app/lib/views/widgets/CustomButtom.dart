@@ -25,7 +25,7 @@ class CustomButton extends StatelessWidget {
           fontSize: 20
         ),
       ),
-      color: Color(0xffff56e4c),
+      color: Color(0xfff56e4c),
       padding: EdgeInsets.fromLTRB(32, 16, 32, 16),
       onPressed: this.onPressed,
     );
