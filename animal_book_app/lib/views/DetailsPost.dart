@@ -43,13 +43,13 @@ class _DetailsPost extends State<DetailsPost> {
   void initState() {
     super.initState();
     _post = widget.post;
-
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
        appBar: AppBar(
-         title: Text("Amimalzinho")
+         title: Text("Amimalzinho"),
+         backgroundColor: Color(0xfff56e4c),
        ),
        body: Stack(
          children: <Widget>[
