@@ -87,7 +87,6 @@ class _MeusPostsState extends State<MeusPosts> {
       body: StreamBuilder(
         stream: _controller.stream,
         builder: (context, snapshot){
-
           switch( snapshot.connectionState){
             case ConnectionState.none:
             case ConnectionState.waiting:
@@ -100,7 +99,6 @@ class _MeusPostsState extends State<MeusPosts> {
               return Text("Erro ao exibir dados!");
             // Recuperando os dados
             QuerySnapshot querySnapshot = snapshot.data;
-
             return ListView.builder(
                   itemCount: querySnapshot.docs.length,
                   itemBuilder: (context, indice) {
@@ -115,7 +113,7 @@ class _MeusPostsState extends State<MeusPosts> {
                           builder: (context){
                             return AlertDialog(
                               title: Text("Confirmar"),
-                              content: Text("Deseja mesmo excluir o anúncio?"),
+                              content: Text("Deseja mesmo excluir o post?"),
                               actions: <Widget>[
                                 FlatButton(
                                   child: Text(

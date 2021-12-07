@@ -16,7 +16,7 @@ class ItemPost extends StatelessWidget {
     });
 
       @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
     return GestureDetector(
       onTap: this.onTapItem,
       child: Card(
@@ -36,7 +36,7 @@ class ItemPost extends StatelessWidget {
             Expanded(
               flex: 3,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -59,15 +59,27 @@ class ItemPost extends StatelessWidget {
                   ),
                 ),
               ),
-            if(this.onPressedRemover != null)Expanded(
-              flex: 1,
+            // Expanded(
+            //   flex: 1,
+            //     child: FlatButton(
+            //       color: Colors.orange,
+            //       padding: EdgeInsets.all(10),
+            //       onPressed: this.onPressedRemover,
+            //       child: Icon(Icons.edit,color: Colors.white,),
+            //     ),
+            //   ),
+              SizedBox(
+              width: 10,
+              ),
+              if(this.onPressedRemover != null) Expanded(
+                flex: 1,
                 child: FlatButton(
                   color: Colors.red,
                   padding: EdgeInsets.all(10),
                   onPressed: this.onPressedRemover,
                   child: Icon(Icons.delete,color: Colors.white,),
                 ),
-              )
+              ),
             //Button Remove
             ],
           ),
