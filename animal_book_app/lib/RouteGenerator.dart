@@ -1,6 +1,7 @@
 import 'package:animal_book_app/views/DetailsPost.dart';
 import 'package:animal_book_app/views/MeusPosts.dart';
 import 'package:animal_book_app/views/NovoPost.dart';
+import 'package:animal_book_app/views/Sobre.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:animal_book_app/views/posts.dart';
@@ -22,6 +23,9 @@ class RouteGenerator{
        case "/meus-posts":
         return MaterialPageRoute(
           builder: (_) => MeusPosts());
+      case "/sobre":
+        return MaterialPageRoute(
+          builder: (_) => Sobre());
        case "/novo-post":
         return MaterialPageRoute(
           builder: (_) => NovoPost());

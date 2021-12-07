@@ -32,6 +32,9 @@ class _PostsState extends State<Posts> {
       case "Meus Posts" :
         Navigator.pushNamed(context, "/meus-posts");
         break;
+      case "Sobre":
+        Navigator.pushNamed(context, "/sobre");
+        break;
       case "Entrar / Cadastrar":
         Navigator.pushNamed(context, "/login");
         break;
@@ -59,7 +62,7 @@ class _PostsState extends State<Posts> {
         ];
       }else{
         itensMenu = [
-          "Meus Posts","Sair"
+          "Meus Posts","Sobre","Sair"
           ];
       }
   }
