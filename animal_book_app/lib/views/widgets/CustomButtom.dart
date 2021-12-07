@@ -16,7 +16,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RaisedButton(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(6)
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Text(
         this.texto,

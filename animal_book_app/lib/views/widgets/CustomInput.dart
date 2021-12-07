@@ -43,7 +43,7 @@ class  CustomInput extends StatelessWidget {
           filled: true,
           fillColor: Colors.white,
           border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6)
+              borderRadius: BorderRadius.circular(6),
         )
       ),
     );

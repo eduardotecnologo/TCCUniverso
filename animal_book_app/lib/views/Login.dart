@@ -43,6 +43,8 @@ class _LoginState extends State<Login> {
     });
   }
 
+
+
   // Recuperar os dados dos campos
   _validarCampos() {
     String email = _controllerEmail.text;
@@ -137,6 +139,12 @@ class _LoginState extends State<Login> {
               ),
               FlatButton(
                 child: Text("Encontre um amiguinho"),
+                onPressed: (){
+                  Navigator.pushReplacementNamed(context, "/");
+                  },
+                ),
+                FlatButton(
+                child: Text("Recuperar senha"),
                 onPressed: (){
                   Navigator.pushReplacementNamed(context, "/");
                   },

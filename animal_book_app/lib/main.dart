@@ -12,6 +12,7 @@ final ThemeData temaPadrao = ThemeData(
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   runApp(MaterialApp(
     title: "Animal Book",
     home: Posts(),
