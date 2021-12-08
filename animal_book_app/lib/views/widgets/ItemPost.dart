@@ -65,7 +65,7 @@ class ItemPost extends StatelessWidget {
                   color: Colors.orange,
                   padding: EdgeInsets.all(10),
                   onPressed: this.onPressedRemover,
-                  child: Icon(Icons.delete,color: Colors.white,),
+                  child: Icon(Icons.edit,color: Colors.white,),
                 ),
               ),
               Expanded(
