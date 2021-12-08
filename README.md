@@ -4,5 +4,5 @@ macflutter
 
 # Para rodar local no emulador:
 # $flutter run
-# Apk na paasta animal_book_app/
+# Apk na pasta animal_book_app/
 
